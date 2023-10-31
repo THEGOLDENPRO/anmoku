@@ -20,6 +20,8 @@ class AsyncAnmoku(BaseClient):
     def __init__(self, config: Optional[ConfigDict] = None) -> None:
         super().__init__(config)
 
+        self._api_url: str = config["jikan_url"]
+
         self._session: Optional[ClientSession] = None
 
     async def request(
@@ -29,24 +31,19 @@ class AsyncAnmoku(BaseClient):
         query: Optional[dict[str, Any]] = None, 
         headers: Optional[dict[str, str]] = None
     ):
-        session = self.recreate()
         headers = headers or {}
-        combined_headers = {**headers, **self._headers}
+        combined_headers = {**headers, **self.config["headers"]}
+
+        session = self.__get_session()
 
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        async with session.get(route, params=query, headers=combined_headers) as resp:
+        async with session.get(route, params = query, headers = combined_headers) as resp:
             resp.raise_for_status()
 
             content = await resp.text()
             return (content, resp.headers)
-
-    def recreate(self) -> ClientSession:
-        if self._session is None:
-            self._session = ClientSession(self._api_url)
-
-        return self._session
 
     async def close(self) -> None:
         if self._session is None:
@@ -54,3 +51,9 @@ class AsyncAnmoku(BaseClient):
         
         await self._session.close()
         self._session = None
+
+    def __get_session(self) -> ClientSession:
+        if self._session is None:
+            self._session = ClientSession(self._api_url)
+
+        return self._session

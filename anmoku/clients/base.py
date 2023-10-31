@@ -16,14 +16,14 @@ class BaseClient(ABC):
     """Base class all clients will inherit from."""
 
     __slots__ = (
-        "_headers",
-        "_api_url",
         "cache",
     )
 
     def __init__(self, config: Optional[ConfigDict] = None) -> None:
-        self._headers: dict[str, Any] = config["headers"] if config is not None else {}
-        self._api_url: str = config["jikan_url"] if config is not None else DEFAULT_API_URL
+        self.config: ConfigDict = config if config is not None else {
+            "headers": {},
+            "jikan_url": DEFAULT_API_URL
+        }
 
         super().__init__()
 
