@@ -1,6 +1,8 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
 
-from typing import Any, Optional
+if TYPE_CHECKING:
+    from typing import Any, Optional
 
 from aiohttp import ClientSession
 
@@ -19,19 +21,6 @@ class AsyncAnmoku(BaseClient):
         super().__init__(config)
 
         self._session: Optional[ClientSession] = None
-
-    def recreate(self) -> ClientSession:
-        if self._session is None:
-            self._session = ClientSession(self._api_url)
-
-        return self._session
-
-    async def close(self) -> None:
-        if self._session is None:
-            return
-        
-        await self._session.close()
-        self._session = None
 
     async def request(
         self, 
@@ -52,3 +41,16 @@ class AsyncAnmoku(BaseClient):
 
             content = await resp.text()
             return (content, resp.headers)
+
+    def recreate(self) -> ClientSession:
+        if self._session is None:
+            self._session = ClientSession(self._api_url)
+
+        return self._session
+
+    async def close(self) -> None:
+        if self._session is None:
+            return
+        
+        await self._session.close()
+        self._session = None
