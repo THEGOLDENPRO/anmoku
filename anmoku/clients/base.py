@@ -4,11 +4,15 @@ from typing import Any, Mapping, Optional, TypedDict, cast
 
 from .errors import ErrorResponseDict, NotFoundError, RatelimitError, ServerError, HTTPError
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 __all__ = ("ConfigDict", "BaseClient")
 
 DEFAULT_API_URL = "https://api.jikan.moe/v4"
+DEFAULT_CONFIG: ConfigDict = {
+    "headers": {},
+    "jikan_url": DEFAULT_API_URL,
+}
 
 class ConfigDict(TypedDict):
     headers: dict[str, Any]
@@ -19,14 +23,12 @@ class BaseClient(ABC):
     """Base class all clients will inherit from."""
 
     __slots__ = (
+        "config",
         "cache",
     )
 
     def __init__(self, config: Optional[ConfigDict] = None) -> None:
-        self.config: ConfigDict = config if config is not None else {
-            "headers": {},
-            "jikan_url": DEFAULT_API_URL
-        }
+        self.config: ConfigDict = config if config is not None else DEFAULT_CONFIG
 
         super().__init__()
 
@@ -41,17 +43,3 @@ class BaseClient(ABC):
             raise ServerError(data)
 
         raise HTTPError(data)
-
-    @abstractmethod
-    def request(
-        self, 
-        route: str, 
-        *, 
-        query: Optional[dict[str, Any]] = None, 
-        headers: Optional[dict[str, str]] = None
-    ):
-        ...
-
-    @abstractmethod
-    def close(self) -> None:
-        ...

@@ -1,7 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 from json import loads as load_json
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Any, Optional
@@ -22,8 +22,6 @@ class AsyncAnmoku(BaseClient):
     def __init__(self, config: Optional[ConfigDict] = None) -> None:
         super().__init__(config)
 
-        self._api_url: str = config["jikan_url"]
-
         self._session: Optional[ClientSession] = None
 
     async def request(
@@ -41,7 +39,7 @@ class AsyncAnmoku(BaseClient):
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        async with session.get(self._api_url + route, params=query, headers=combined_headers) as resp:
+        async with session.get(self.config["jikan_url"] + route, params=query, headers=combined_headers) as resp:
             content = await resp.text()
 
             if resp.content_type == "application/json":
@@ -62,6 +60,6 @@ class AsyncAnmoku(BaseClient):
 
     def __get_session(self) -> ClientSession:
         if self._session is None:
-            self._session = ClientSession(self._api_url)
+            self._session = ClientSession(self.config["jikan_url"])
 
         return self._session
