@@ -1,7 +1,10 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
 
 from json import loads as load_json
-from typing import Any, Optional
+
+if TYPE_CHECKING:
+    from typing import Any, Optional
 
 from aiohttp import ClientSession
 
@@ -19,20 +22,9 @@ class AsyncAnmoku(BaseClient):
     def __init__(self, config: Optional[ConfigDict] = None) -> None:
         super().__init__(config)
 
+        self._api_url: str = config["jikan_url"]
+
         self._session: Optional[ClientSession] = None
-
-    def recreate(self) -> ClientSession:
-        if self._session is None:
-            self._session = ClientSession()
-
-        return self._session
-
-    async def close(self) -> None:
-        if self._session is None:
-            return
-        
-        await self._session.close()
-        self._session = None
 
     async def request(
         self, 
@@ -41,10 +33,10 @@ class AsyncAnmoku(BaseClient):
         query: Optional[dict[str, Any]] = None, 
         headers: Optional[dict[str, str]] = None
     ):
-        session = self.recreate()
-
         headers = headers or {}
-        combined_headers = {**headers, **self._headers}
+        combined_headers = {**headers, **self.config["headers"]}
+
+        session = self.__get_session()
 
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
@@ -60,3 +52,16 @@ class AsyncAnmoku(BaseClient):
             self._raise_http_error(content, resp.status)
 
             return content
+        
+    async def close(self) -> None:
+        if self._session is None:
+            return
+        
+        await self._session.close()
+        self._session = None
+
+    def __get_session(self) -> ClientSession:
+        if self._session is None:
+            self._session = ClientSession(self._api_url)
+
+        return self._session
