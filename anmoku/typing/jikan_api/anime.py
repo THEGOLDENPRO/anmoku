@@ -37,15 +37,8 @@ class _AiredDateData(TypedDict):
     month: int
     year: int
 
-class _FromToDateData(TypedDict):
-    _from: _AiredDateData # TODO: This also needs to be "from"!
-    to: _AiredDateData
-
-@final
-class AiredData(TypedDict):
-    _from: str # TODO: This needs to be "from" but I can't use from as it's an inbuilt keyword, help!
-    to: str
-    prop: _FromToDateData
+_AiredPropData = TypedDict("Prop", {"from": _AiredDateData, "to": _AiredDateData})
+AiredData = TypedDict("AiredData", {"from": str, "to": str, "prop": _AiredPropData})
 
 @final
 class BroadcastData(TypedDict):
