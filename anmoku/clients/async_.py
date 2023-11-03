@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from json import loads as load_json
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Any, Optional
 
 from aiohttp import ClientSession
+from json import loads as load_json
 
 from .base import BaseClient, ConfigDict
 

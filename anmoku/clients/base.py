@@ -1,6 +1,8 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING, TypedDict, cast
 
-from typing import Any, Mapping, Optional, TypedDict, cast
+if TYPE_CHECKING:
+    from typing import Any, Optional, Mapping
 
 from .errors import ErrorResponseDict, NotFoundError, RatelimitError, ServerError, HTTPError
 
