@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, TypeVar, Type
 if TYPE_CHECKING:
     from typing import Any, Optional
 
-    from .base import ConfigDict
     from ..typing.anmoku import Snowflake
     from ..objects import Anime, Character
 
@@ -22,10 +21,8 @@ __all__ = ("AsyncAnmoku",)
 
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
-    def __init__(self) -> None:
-        ...
 
-    async def get(self, object: T, id: Snowflake) -> T: 
+    async def get(self: AsyncAnmoku, object: T, id: Snowflake) -> T: 
         """Get object by id."""
         # TODO: Find a more suitable name other than "object".
 
@@ -42,10 +39,13 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
 
     def __init__(
         self, 
-        config: Optional[ConfigDict] = None, 
+        debug: Optional[bool] = False, 
+        jikan_url: Optional[str] = "https://api.jikan.moe/v4",
         aiohttp_session: Optional[ClientSession] = None
     ) -> None:
-        super().__init__(config)
+        super().__init__(debug)
+
+        self.jikan_url = jikan_url
 
         self._session = aiohttp_session
 
@@ -57,16 +57,15 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         headers: Optional[dict[str, str]] = None
     ):
         headers = headers or {}
-        combined_headers = {**headers, **self.config["headers"]}
 
         session = self.__get_session()
-        url = self.config["jikan_url"] + route
+        url = self.jikan_url + route
 
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
         self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
-        async with session.get(url, params=query, headers=combined_headers) as resp:
+        async with session.get(url, params = query, headers = headers) as resp:
             content = await resp.text()
 
             if resp.content_type == "application/json":
@@ -78,7 +77,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
                 self._raise_http_error(content, resp.status)
 
             return content
-        
+
     async def close(self) -> None:
         if self._session is None:
             return

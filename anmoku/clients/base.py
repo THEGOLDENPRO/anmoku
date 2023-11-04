@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, TypedDict, cast
+from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Mapping
+    from typing import Any, Mapping
 
 
 import logging
@@ -12,33 +12,19 @@ from devgoldyutils import LoggerAdapter
 from ..logger import anmoku_logger
 from ..errors import ErrorResponseDict, NotFoundError, RatelimitError, ServerError, HTTPError
 
-__all__ = ("ConfigDict", "BaseClient")
-
-DEFAULT_API_URL = "https://api.jikan.moe/v4"
-DEFAULT_CONFIG: ConfigDict = {
-    "headers": {},
-    "jikan_url": DEFAULT_API_URL,
-    "debug": False
-}
-
-class ConfigDict(TypedDict):
-    headers: dict[str, Any]
-    jikan_url: str
-    debug: bool
+__all__ = ("BaseClient",)
 
 
 class BaseClient(ABC):
     """Base class all clients will inherit from."""
 
     __slots__ = (
-        "config",
         "cache",
     )
 
-    def __init__(self, config: Optional[ConfigDict] = None) -> None:
-        self.config: ConfigDict = {**DEFAULT_CONFIG, **config} if config is not None else DEFAULT_CONFIG
+    def __init__(self, debug: bool = False) -> None:
 
-        if self.config["debug"] is True:
+        if debug is True:
             anmoku_logger.setLevel(logging.DEBUG)
 
         self.logger = LoggerAdapter(anmoku_logger, prefix = self.__class__.__name__)
