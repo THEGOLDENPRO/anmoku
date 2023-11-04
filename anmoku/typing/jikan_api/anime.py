@@ -11,15 +11,15 @@ __all__ = (
 
 # NOTE: This module is subject to change. I may move some types here to a central location to be used in other types.
 
-class _ImageData(TypedDict):
+class ImageData(TypedDict):
     image_url: str
     small_image_url: str
     large_image_url: str
 
 @final
 class ImagesData(TypedDict):
-    jpg: _ImageData
-    webp: _ImageData
+    jpg: ImageData
+    webp: ImageData
 
 @final
 class TrailerData(TypedDict):
@@ -32,13 +32,13 @@ class TitleData(TypedDict):
     type: Literal["Default", "Synonym", "Japanese", "English"]
     title: str
 
-class _AiredDateData(TypedDict):
+class AiredDateData(TypedDict):
     day: int
     month: int
     year: int
 
-_AiredPropData = TypedDict("Prop", {"from": _AiredDateData, "to": _AiredDateData})
-AiredData = TypedDict("AiredData", {"from": str, "to": str, "prop": _AiredPropData})
+AiredPropData = TypedDict("_AiredPropData", {"from": AiredDateData, "to": AiredDateData})
+AiredData = TypedDict("AiredData", {"from": str, "to": str, "prop": AiredPropData})
 
 @final
 class BroadcastData(TypedDict):
@@ -47,7 +47,7 @@ class BroadcastData(TypedDict):
     timezone: str
     string: str
 
-class _ExtraInfoPointersData(TypedDict): # TODO: I will change this later, just doing this now for the sake of convenience.
+class ExtraInfoPointersData(TypedDict): # TODO: I will change this later, just doing this now for the sake of convenience.
     mal_id: int
     type: str
     name: str
@@ -64,7 +64,7 @@ class AnimeData(TypedDict):
     title_english: str
     title_japanese: str
     title_synonyms: List[str]
-    type: Literal["TV", "Movie", "ONA"] | Any[str] # TODO: Find the rest of these.
+    type: Literal["TV", "Movie", "ONA"] | Any # TODO: Find the rest of these.
     source: str
     episodes: int
     status: Literal["Not yet aired", "Currently Airing", "Finished Airing"]
@@ -80,16 +80,16 @@ class AnimeData(TypedDict):
     favorites: int
     synopsis: str
     background: int
-    season: Literal["summer", "fall"] | Any[str] # TODO: Find the rest of these then remove Any.
+    season: Literal["summer", "fall"] | Any # TODO: Find the rest of these then remove Any.
     year: int
     broadcast: BroadcastData
-    producers: List[_ExtraInfoPointersData]
-    licensors: List[_ExtraInfoPointersData]
-    studios: List[_ExtraInfoPointersData]
-    genres: List[_ExtraInfoPointersData]
-    explicit_genres: List[_ExtraInfoPointersData]
-    themes: List[_ExtraInfoPointersData]
-    demographics: List[_ExtraInfoPointersData]
+    producers: List[ExtraInfoPointersData]
+    licensors: List[ExtraInfoPointersData]
+    studios: List[ExtraInfoPointersData]
+    genres: List[ExtraInfoPointersData]
+    explicit_genres: List[ExtraInfoPointersData]
+    themes: List[ExtraInfoPointersData]
+    demographics: List[ExtraInfoPointersData]
 
 @final
 class FullAnimeData(AnimeData): # TODO: Finish this.

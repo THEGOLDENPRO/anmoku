@@ -4,9 +4,13 @@ from typing import TYPE_CHECKING, TypedDict, cast
 if TYPE_CHECKING:
     from typing import Any, Optional, Mapping
 
-from .errors import ErrorResponseDict, NotFoundError, RatelimitError, ServerError, HTTPError
 
+import logging
 from abc import ABC
+from devgoldyutils import LoggerAdapter
+
+from ..logger import anmoku_logger
+from ..errors import ErrorResponseDict, NotFoundError, RatelimitError, ServerError, HTTPError
 
 __all__ = ("ConfigDict", "BaseClient")
 
@@ -14,11 +18,13 @@ DEFAULT_API_URL = "https://api.jikan.moe/v4"
 DEFAULT_CONFIG: ConfigDict = {
     "headers": {},
     "jikan_url": DEFAULT_API_URL,
+    "debug": False
 }
 
 class ConfigDict(TypedDict):
     headers: dict[str, Any]
     jikan_url: str
+    debug: bool
 
 
 class BaseClient(ABC):
@@ -30,7 +36,12 @@ class BaseClient(ABC):
     )
 
     def __init__(self, config: Optional[ConfigDict] = None) -> None:
-        self.config: ConfigDict = config if config is not None else DEFAULT_CONFIG
+        self.config: ConfigDict = {**DEFAULT_CONFIG, **config} if config is not None else DEFAULT_CONFIG
+
+        if self.config["debug"] is True:
+            anmoku_logger.setLevel(logging.DEBUG)
+
+        self.logger = LoggerAdapter(anmoku_logger, prefix = self.__class__.__name__)
 
         super().__init__()
 
