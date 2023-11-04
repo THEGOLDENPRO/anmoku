@@ -6,10 +6,14 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass
 
-__all__ = ("Character",)
+__all__ = ("Character", "FullCharacter")
 
 @dataclass
 class Character():
     _endpoint = "/characters"
 
+    data: JikanResponseData[dict]
+
+@dataclass
+class FullCharacter(Character):
     data: JikanResponseData[dict]

@@ -6,9 +6,13 @@ if TYPE_CHECKING:
     from typing import Any, Optional
 
     from ..typing.anmoku import Snowflake
-    from ..objects import Anime, Character
+    from ..objects import (
+        Anime, FullAnime,
+        Character, FullCharacter
+    )
 
-    T = TypeVar("T", Type[Anime], Type[Character])
+    A = TypeVar("A", Type[Anime], Type[Character])
+    B = TypeVar("B", Type[FullAnime], Type[FullCharacter])
 
 from devgoldyutils import Colours
 from aiohttp import ClientSession
@@ -22,11 +26,19 @@ __all__ = ("AsyncAnmoku",)
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
 
-    async def get(self: AsyncAnmoku, object: T, id: Snowflake) -> T: 
-        """Get object by id."""
+    async def get(self: AsyncAnmoku, object: A, id: Snowflake) -> A: 
+        """Get's object by id."""
         # TODO: Find a more suitable name other than "object".
 
         json_data = await self._request(object._endpoint + f"/{id}")
+
+        return object(json_data)
+
+    async def get_full(self: AsyncAnmoku, object: B, id: Snowflake) -> B: 
+        """Get's full object by id."""
+        # TODO: Find a more suitable name other than "object".
+
+        json_data = await self._request(object._endpoint + f"/{id}/full")
 
         return object(json_data)
 
