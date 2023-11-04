@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    ...
+    from ..typing.jikan_api import JikanResponseData
 
 from dataclasses import dataclass
 
@@ -11,4 +11,4 @@ __all__ = ("Character",)
 class Character():
     _endpoint = "/characters"
 
-    data: dict
+    data: JikanResponseData[dict]
