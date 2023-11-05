@@ -9,8 +9,8 @@ if TYPE_CHECKING:
         AnimeCharacterData, 
         JikanResponseData, 
 
-        # Temporary
-        # -----------
+        # NOTE: Temporary
+        # ----------------
         PartialPerson,
         PartialCharacter
     )
@@ -19,6 +19,8 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass, field
 
+from .base import JikanObject
+
 __all__ = (
     "Anime", 
     "FullAnime",
@@ -26,7 +28,7 @@ __all__ = (
 )
 
 @dataclass
-class Anime():
+class Anime(JikanObject):
     _get_endpoint = "/anime/{id}"
 
     data: JikanResponseData[AnimeData]
@@ -53,17 +55,30 @@ class VoiceActor():
 class AnimeCharacter():
     data: AnimeCharacterData
 
-    character: PartialCharacter = field(init = False) # TODO: Change this to actual character class.
+    partial_character: PartialCharacter = field(init = False) # TODO: Change this to actual character class.
     role: str = field(init = False)
     voice_actors: List[VoiceActor] = field(init = False)
 
+    id: int = field(init = False)
+    name: str = field(init = False)
+    url: str = field(init = False)
+    # TODO: Push images key forward from partial_character as a class. 
+    # (I need to found out how I'm going to implement an image object that we can use for everything)
+
     def __post_init__(self):
-        self.character = self.data.get("character")
+        character = self.data.get("character")
+
+        self.partial_character = character # TODO: Change this to actual character class.
         self.role = self.data.get("role")
         self.voice_actors = [VoiceActor(actor) for actor in self.data.get("voice_actors", [])]
 
+        self.id = character["mal_id"]
+        self.name = character["name"]
+        self.url = character["url"]
+
 @dataclass
-class AnimeCharacters():
+class AnimeCharacters(JikanObject):
+    """Get data of the characters from a particular anime."""
     _get_endpoint = "/anime/{id}/characters"
 
     data: JikanResponseData[List[AnimeCharacterData]]

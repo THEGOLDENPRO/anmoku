@@ -6,15 +6,11 @@ if TYPE_CHECKING:
     from typing import Any, Optional, Dict
 
     from ..typing.anmoku import Snowflake
-    from ..objects import (
-        Anime, FullAnime, AnimeCharacters,
-        Character, FullCharacter
-    )
+    from ..objects import JikanObject
 
     A = TypeVar(
         "A", 
-        Anime, FullAnime, AnimeCharacters,
-        Character,  FullCharacter
+        bound = JikanObject
     )
 
 from devgoldyutils import Colours
