@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, TypeVar, Type
 
 if TYPE_CHECKING:
-    from typing import Any, Optional
+    from typing import Any, Optional, Dict
 
     from ..typing.anmoku import Snowflake
     from ..objects import (
@@ -67,7 +67,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         *, 
         query: Optional[dict[str, Any]] = None, 
         headers: Optional[dict[str, str]] = None
-    ):
+    ) -> Dict[Any]:
         headers = headers or {}
 
         session = self.__get_session()
