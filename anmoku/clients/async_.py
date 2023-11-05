@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
     A = TypeVar(
         "A", 
-        Type[Anime], Type[FullAnime], Type[AnimeCharacters],
-        Type[Character],  Type[FullCharacter]
+        Anime, FullAnime, AnimeCharacters,
+        Character,  FullCharacter
     )
 
 from devgoldyutils import Colours
@@ -29,7 +29,7 @@ __all__ = ("AsyncAnmoku",)
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
 
-    async def get(self: AsyncAnmoku, object: A, id: Snowflake) -> A:
+    async def get(self: AsyncAnmoku, object: Type[A], id: Snowflake) -> A:
         """Get's the object by id."""
         # TODO: Find a more suitable name other than "object".
 
