@@ -5,6 +5,7 @@ if TYPE_CHECKING:
     from typing import List, Literal, Any
     from .character import PartialCharacter
     from .person import PartialPerson
+    from ..mal import MALRatings
 
 __all__ = (
     "AnimeData",
@@ -79,14 +80,14 @@ class AnimeData(TypedDict):
     title_english: str
     title_japanese: str
     title_synonyms: List[str]
-    type: Literal["TV", "Movie", "ONA"] | Any # TODO: Find the rest of these.
+    type: Literal["TV", "Movie", "ONA", "Special"] # TODO: Find the rest of these.
     source: str
     episodes: int
     status: Literal["Not yet aired", "Currently Airing", "Finished Airing"]
     airing: bool
     aired: AiredData
     duration: str
-    rating: Literal["G - All Ages", "PG-13 - Teens 13 or older"] | Any[str] # TODO: Find the rest of these.
+    rating: MALRatings
     score: int
     score_by: int
     rank: int

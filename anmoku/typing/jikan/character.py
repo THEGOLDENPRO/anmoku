@@ -10,7 +10,8 @@ __all__ = (
 
 class ImageData(TypedDict):
     image_url: str
-    small_image_url: str
+    # NOTE: The 'small_image_url' key just doesn't exist in responses lmao, it's suppose to be at least None.
+    #small_image_url: str 
 
 @final
 class ImagesData(TypedDict):

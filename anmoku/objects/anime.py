@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass, field
 
+from .image import Image
 from .base import JikanObject
 
 __all__ = (
@@ -62,8 +63,7 @@ class AnimeCharacter():
     id: int = field(init = False)
     name: str = field(init = False)
     url: str = field(init = False)
-    # TODO: Push images key forward from partial_character as a class. 
-    # (I need to found out how I'm going to implement an image object that we can use for everything)
+    image: Image = field(init = False)
 
     def __post_init__(self):
         character = self.data.get("character")
@@ -75,6 +75,7 @@ class AnimeCharacter():
         self.id = character["mal_id"]
         self.name = character["name"]
         self.url = character["url"]
+        self.image = Image(character["images"])
 
 @dataclass
 class AnimeCharacters(JikanObject):
