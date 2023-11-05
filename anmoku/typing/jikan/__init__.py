@@ -1,3 +1,5 @@
-from .jikan import *
+from .api import *
 from .anime import *
-from .producers import *
+from .character import *
+from .producer import *
+from .person import *

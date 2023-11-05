@@ -3,10 +3,13 @@ from typing import TYPE_CHECKING, TypedDict, final
 
 if TYPE_CHECKING:
     from typing import List, Literal, Any
+    from .character import PartialCharacter
+    from .person import PartialPerson
 
 __all__ = (
     "AnimeData",
-    "FullAnimeData"
+    "FullAnimeData",
+    "AnimeCharactersData"
 )
 
 # NOTE: This module is subject to change. I may move some types here to a central location to be used in other types.
@@ -109,3 +112,16 @@ class FullAnimeData(AnimeData): # TODO: Finish this.
     theme: Theme
     external: List[ExternalSource]
     streaming: List[ExternalSource]
+
+
+@final
+class VoiceActor(TypedDict):
+    person: PartialPerson
+    language: str
+
+
+@final
+class AnimeCharactersData(TypedDict):
+    character: PartialCharacter
+    role: str
+    voice_actors: List[VoiceActor]

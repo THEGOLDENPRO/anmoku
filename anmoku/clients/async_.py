@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypeVar, Type
+from typing import TYPE_CHECKING, TypeVar, Type, overload
 
 if TYPE_CHECKING:
     from typing import Any, Optional, Dict
 
     from ..typing.anmoku import Snowflake
     from ..objects import (
-        Anime, FullAnime,
+        Anime, FullAnime, AnimeCharacters,
         Character, FullCharacter
     )
 
-    A = TypeVar("A", Type[Anime], Type[Character])
-    B = TypeVar("B", Type[FullAnime], Type[FullCharacter])
+    A = TypeVar(
+        "A", 
+        Type[Anime], Type[FullAnime], Type[AnimeCharacters],
+        Type[Character],  Type[FullCharacter]
+    )
 
 from devgoldyutils import Colours
 from aiohttp import ClientSession
@@ -26,19 +29,13 @@ __all__ = ("AsyncAnmoku",)
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
 
-    async def get(self: AsyncAnmoku, object: A, id: Snowflake) -> A: 
-        """Get's object by id."""
+    async def get(self: AsyncAnmoku, object: A, id: Snowflake) -> A:
+        """Get's the object by id."""
         # TODO: Find a more suitable name other than "object".
 
-        json_data = await self._request(object._endpoint + f"/{id}")
+        url = object._get_endpoint.format(id = id)
 
-        return object(json_data)
-
-    async def get_full(self: AsyncAnmoku, object: B, id: Snowflake) -> B: 
-        """Get's full object by id."""
-        # TODO: Find a more suitable name other than "object".
-
-        json_data = await self._request(object._endpoint + f"/{id}/full")
+        json_data = await self._request(url)
 
         return object(json_data)
 

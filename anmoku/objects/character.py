@@ -10,10 +10,12 @@ __all__ = ("Character", "FullCharacter")
 
 @dataclass
 class Character():
-    _endpoint = "/characters"
+    _get_endpoint = "/characters"
 
     data: JikanResponseData[dict]
 
 @dataclass
 class FullCharacter(Character):
+    _get_endpoint = "/characters/{id}/full"
+
     data: JikanResponseData[dict]
