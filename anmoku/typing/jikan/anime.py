@@ -47,9 +47,21 @@ class BroadcastData(TypedDict):
     timezone: str
     string: str
 
-class ExtraInfoPointersData(TypedDict): # TODO: I will change this later, just doing this now for the sake of convenience.
+class Entry(TypedDict):
     mal_id: int
     type: str
+    name: str
+    url: str
+
+class Relation(TypedDict):
+    relation: str
+    entry: List[Entry]
+
+class Theme(TypedDict):
+    openings: List[str]
+    endings: List[str]
+
+class ExternalSource(TypedDict):
     name: str
     url: str
 
@@ -83,14 +95,17 @@ class AnimeData(TypedDict):
     season: Literal["summer", "fall"] | Any # TODO: Find the rest of these then remove Any.
     year: int
     broadcast: BroadcastData
-    producers: List[ExtraInfoPointersData]
-    licensors: List[ExtraInfoPointersData]
-    studios: List[ExtraInfoPointersData]
-    genres: List[ExtraInfoPointersData]
-    explicit_genres: List[ExtraInfoPointersData]
-    themes: List[ExtraInfoPointersData]
-    demographics: List[ExtraInfoPointersData]
+    producers: List[Entry]
+    licensors: List[Entry]
+    studios: List[Entry]
+    genres: List[Entry]
+    explicit_genres: List[Entry]
+    themes: List[Entry]
+    demographics: List[Entry]
 
 @final
 class FullAnimeData(AnimeData): # TODO: Finish this.
-    ...
+    relations: List[Relation]
+    theme: Theme
+    external: List[ExternalSource]
+    streaming: List[ExternalSource]
