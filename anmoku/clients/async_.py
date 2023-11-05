@@ -77,6 +77,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
         self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
+
         async with session.get(url, params = query, headers = headers) as resp:
             content = await resp.text()
 
