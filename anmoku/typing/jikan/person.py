@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     ...
 
 __all__ = (
-    "PartialPerson",
+    "PartialPersonData",
 )
 
 class ImageData(TypedDict):
@@ -16,7 +16,7 @@ class ImagesData(TypedDict):
     jpg: ImageData
 
 
-class PartialPerson(TypedDict):
+class PartialPersonData(TypedDict):
     mal_id: int
     url: str
     images: ImagesData

@@ -3,49 +3,32 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import List
-    from ..typing.jikan import (
-        AnimeData, 
-        FullAnimeData, 
+    from ...typing.jikan import (
         AnimeCharacterData, 
         JikanResponseData, 
 
         # NOTE: Temporary
         # ----------------
-        PartialPerson,
-        PartialCharacter
+        PartialPersonData,
+        PartialCharacterData
     )
 
-    from ..typing.jikan.anime import VoiceActorData
+    from ...typing.jikan.anime.characters import VoiceActorData
 
 from dataclasses import dataclass, field
 
-from .image import Image
-from .base import JikanObject
+from ..image import Image
+from ..base import JikanObject
 
 __all__ = (
-    "Anime", 
-    "FullAnime",
-    "AnimeCharacters"
+    "AnimeCharacters",
 )
-
-@dataclass
-class Anime(JikanObject):
-    _get_endpoint = "/anime/{id}"
-
-    data: JikanResponseData[AnimeData]
-
-@dataclass
-class FullAnime(Anime):
-    _get_endpoint = "/anime/{id}/full"
-
-    data: JikanResponseData[FullAnimeData]
-
 
 @dataclass
 class VoiceActor():
     data: VoiceActorData
 
-    person: PartialPerson = field(init = False) # TODO: Change this to actual person class.
+    person: PartialPersonData = field(init = False) # TODO: Change this to actual person class.
     language: str = field(init = False)
 
     def __post_init__(self):
@@ -56,7 +39,7 @@ class VoiceActor():
 class AnimeCharacter():
     data: AnimeCharacterData
 
-    partial_character: PartialCharacter = field(init = False) # TODO: Change this to actual character class.
+    partial_character: PartialCharacterData = field(init = False) # TODO: Change this to actual character class.
     role: str = field(init = False)
     voice_actors: List[VoiceActor] = field(init = False)
 

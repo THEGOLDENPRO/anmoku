@@ -25,15 +25,13 @@ __all__ = ("AsyncAnmoku",)
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
 
-    async def get(self: AsyncAnmoku, object: Type[A], id: Snowflake) -> A:
+    async def get(self: AsyncAnmoku, jikan_object: Type[A], id: Snowflake) -> A:
         """Get's the object by id."""
-        # TODO: Find a more suitable name other than "object".
-
-        url = object._get_endpoint.format(id = id)
+        url = jikan_object._get_endpoint.format(id = id)
 
         json_data = await self._request(url)
 
-        return object(json_data)
+        return jikan_object(json_data)
 
 class AsyncAnmoku(BaseClient, AsyncWrapper):
     """Asynchronous anmoku client."""

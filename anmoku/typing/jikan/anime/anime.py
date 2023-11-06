@@ -3,14 +3,12 @@ from typing import TYPE_CHECKING, TypedDict, final
 
 if TYPE_CHECKING:
     from typing import List, Literal, Any
-    from .character import PartialCharacter
-    from .person import PartialPerson
-    from ..mal import MALRatings
+    from ...mal import MALRatings
 
 __all__ = (
     "AnimeData",
     "FullAnimeData",
-    "AnimeCharacterData"
+    "PartialAnimeData"
 )
 
 # NOTE: This module is subject to change. I may move some types here to a central location to be used in other types.
@@ -70,17 +68,20 @@ class ExternalSourceData(TypedDict):
     url: str
 
 
-class AnimeData(TypedDict):
+class PartialAnimeData(TypedDict):
     mal_id: int
     url: str
     images: ImagesData
+    title: str
+
+class AnimeData(PartialAnimeData):
     trailer: TrailerData
     approved: bool
     titles: List[TitleData]
     title_english: str
     title_japanese: str
     title_synonyms: List[str]
-    type: Literal["TV", "Movie", "ONA", "Special"] # TODO: Find the rest of these.
+    type: Literal["TV", "Movie", "ONA", "OVA", "Special", "Music"]
     source: str
     episodes: int
     status: Literal["Not yet aired", "Currently Airing", "Finished Airing"]
@@ -113,16 +114,3 @@ class FullAnimeData(AnimeData): # TODO: Finish this.
     theme: ThemeData
     external: List[ExternalSourceData]
     streaming: List[ExternalSourceData]
-
-
-@final
-class VoiceActorData(TypedDict):
-    person: PartialPerson
-    language: str
-
-
-@final
-class AnimeCharacterData(TypedDict):
-    character: PartialCharacter
-    role: str
-    voice_actors: List[VoiceActorData]
