@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from ..typing.jikan import JikanResponseData
@@ -10,7 +10,7 @@ __all__ = ("JikanObject",)
 
 @dataclass
 class JikanObject():
-    _get_endpoint: str = field(init = False, default = None)
+    _get_endpoint: Optional[str] = field(init = False, default = None)
     """The jikan api endpoint where you can get this object."""
 
-    data: JikanResponseData[dict]
+    data: JikanResponseData[Any]

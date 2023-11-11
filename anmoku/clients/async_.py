@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypeVar, Type
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Dict
+    from typing import Any, Optional, TypeVar
 
     from ..typing.anmoku import Snowflake
     from ..objects import JikanObject
@@ -25,7 +25,7 @@ __all__ = ("AsyncAnmoku",)
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
 
-    async def get(self: AsyncAnmoku, jikan_object: Type[A], id: Snowflake) -> A:
+    async def get(self: AsyncAnmoku, jikan_object: type[A], id: Snowflake) -> A:
         """Get's the object by id."""
         url = jikan_object._get_endpoint.format(id = id)
 
@@ -43,13 +43,12 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
     def __init__(
         self, 
         debug: Optional[bool] = False, 
-        jikan_url: Optional[str] = "https://api.jikan.moe/v4",
+        jikan_url: Optional[str] = None,
         aiohttp_session: Optional[ClientSession] = None
     ) -> None:
         super().__init__(debug)
 
-        self.jikan_url = jikan_url
-
+        self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = aiohttp_session
 
     async def _request(
@@ -58,7 +57,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         *, 
         query: Optional[dict[str, Any]] = None, 
         headers: Optional[dict[str, str]] = None
-    ) -> Dict[Any]:
+    ) -> dict[str, Any]:
         headers = headers or {}
 
         session = self.__get_session()

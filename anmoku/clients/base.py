@@ -19,6 +19,7 @@ class BaseClient(ABC):
     """Base class all clients will inherit from."""
 
     __slots__ = (
+        "logger",
         "cache",
     )
 
