@@ -20,3 +20,4 @@ class AnimeCharacterData(TypedDict):
     character: PartialCharacterData
     role: str
     voice_actors: List[VoiceActorData]
+    favorites: int
