@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass, field
 
-from ..base import JikanObject
+from ..base import JikanResource
 from ..image import Image
 
 __all__ = (
@@ -21,7 +21,7 @@ __all__ = (
 )
 
 @dataclass
-class Anime(JikanObject):
+class Anime(JikanResource):
     _get_endpoint = "/anime/{id}"
 
     data: JikanResponseData[AnimeData]

@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 from dataclasses import dataclass, field
 
 from ..image import Image
-from ..base import JikanObject
+from ..base import JikanResource
 
 __all__ = (
     "AnimeCharacters",
@@ -61,7 +61,7 @@ class AnimeCharacter():
         self.image = Image(character["images"])
 
 @dataclass
-class AnimeCharacters(JikanObject):
+class AnimeCharacters(JikanResource):
     """Get data of the characters from a particular anime."""
     _get_endpoint = "/anime/{id}/characters"
 

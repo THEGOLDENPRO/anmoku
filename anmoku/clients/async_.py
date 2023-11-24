@@ -6,11 +6,11 @@ if TYPE_CHECKING:
     from typing import Any, Optional, TypeVar
 
     from ..typing.anmoku import Snowflake
-    from ..objects import JikanObject
+    from ..resources import JikanResource
 
     A = TypeVar(
         "A", 
-        bound = JikanObject
+        bound = JikanResource
     )
 
 from devgoldyutils import Colours
@@ -25,13 +25,13 @@ __all__ = ("AsyncAnmoku",)
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
 
-    async def get(self: AsyncAnmoku, jikan_object: type[A], id: Snowflake) -> A:
+    async def get(self: AsyncAnmoku, resource: type[A], id: Snowflake) -> A:
         """Get's the object by id."""
-        url = jikan_object._get_endpoint.format(id = id)
+        url = resource._get_endpoint.format(id = id)
 
         json_data = await self._request(url)
 
-        return jikan_object(json_data)
+        return resource(json_data)
 
 class AsyncAnmoku(BaseClient, AsyncWrapper):
     """Asynchronous anmoku client."""

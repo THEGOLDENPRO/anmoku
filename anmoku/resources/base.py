@@ -6,10 +6,10 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass, field
 
-__all__ = ("JikanObject",)
+__all__ = ("JikanResource",)
 
 @dataclass
-class JikanObject():
+class JikanResource():
     _get_endpoint: Optional[str] = field(init = False, default = None)
     """The jikan api endpoint where you can get this object."""
 
