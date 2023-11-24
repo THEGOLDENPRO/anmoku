@@ -13,9 +13,9 @@
 > Anmoku is currently a work in progress so the features below may not be complete yet.
 
 ## Features ✨
-- [ ] Fully type hinted. 🌌 ~~*yes you heard me*~~
 - [ ] Rate limiting 🎀 (with actual waiting).
 - [ ] Supports caching. ⚡
+- [ ] [Fully type hinted.](#type-hinting-support!-) 🌌 ~~*yes you heard me correctly*~~
 
 ## It's eassssssy! 😄
 ```python
