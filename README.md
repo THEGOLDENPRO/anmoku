@@ -15,7 +15,7 @@
 ## Features ✨
 - [ ] Rate limiting 🎀 (with actual waiting).
 - [ ] Supports caching. ⚡
-- [ ] [Fully type hinted.](#type-hinting-support!-) 🌌 ~~*yes you heard me correctly*~~
+- [ ] [Fully type hinted.](#type-hinting-support-) 🌌 ~~*yes you heard me correctly*~~
 
 ## It's eassssssy! 😄
 ```python
