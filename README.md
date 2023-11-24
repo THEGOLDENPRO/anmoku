@@ -14,8 +14,8 @@
 
 ## Features ✨
 - [ ] Fully type hinted. 🌌 ~~*yes you heard me*~~
-- [ ] Rate limiting (with actual waiting).
-- [ ] Supports caching.
+- [ ] Rate limiting 🎀 (with actual waiting).
+- [ ] Supports caching. ⚡
 
 ## It's eassssssy! 😄
 ```python
@@ -49,3 +49,9 @@ Ishida, Maria (https://myanimelist.net/character/97943/Maria_Ishida)
 Ishida, Sister (https://myanimelist.net/character/118723/Sister_Ishida)
 # ... more characters below but I cut them off for the convenience of this readme
 ```
+
+## Type hinting support! 🌌
+Our library is strongly typed.
+<img src="./assets/type_hints_1.png" width="100%">
+On top of that we even provide class interfaces if you wish for stability and easy of use.
+<img src="./assets/type_hints_2.png" width="100%">
