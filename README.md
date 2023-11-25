@@ -13,9 +13,9 @@
 > Anmoku is currently a work in progress so the features below may not be complete yet.
 
 ## Features ✨
-- [ ] Fully type hinted. 🌌 ~~*yes you heard me*~~
 - [ ] Rate limiting 🎀 (with actual waiting).
 - [ ] Supports caching. ⚡
+- [ ] [Fully type hinted.](#type-hinting-support-) 🌌 ~~*yes you heard me correctly*~~
 
 ## It's eassssssy! 😄
 ```python
@@ -51,7 +51,10 @@ Ishida, Sister (https://myanimelist.net/character/118723/Sister_Ishida)
 ```
 
 ## Type hinting support! 🌌
-Our library is strongly typed.
+API responses in our library are strongly typed.
+
 <img src="./assets/type_hints_1.png" width="100%">
-On top of that we even provide class interfaces if you wish for stability and easy of use.
+
+On top of that, we even provide class interfaces if you wish for stability and ease of use.
+
 <img src="./assets/type_hints_2.png" width="100%">
