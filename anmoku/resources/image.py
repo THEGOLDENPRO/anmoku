@@ -20,8 +20,8 @@ class ImagesData(TypedDict):
 
 @dataclass
 class Image():
-    """An anmoku image object."""
-    data: ImagesData
+    """A jikan image object."""
+    data: ImagesData = field(repr = False)
 
     url: Optional[str] = field(init = False)
     """The url of this image."""

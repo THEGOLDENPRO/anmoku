@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, TypedDict, final
 
 if TYPE_CHECKING:
-    from typing import List, Literal, Any
+    from typing import List, Literal, Any, Optional
     from ...mal import MALRatings
 
 __all__ = (
@@ -82,7 +82,7 @@ class AnimeData(PartialAnimeData):
     title_japanese: str
     title_synonyms: List[str]
     type: Literal["TV", "Movie", "ONA", "OVA", "Special", "Music"]
-    source: str
+    source: Optional[str]
     episodes: int
     status: Literal["Not yet aired", "Currently Airing", "Finished Airing"]
     airing: bool
