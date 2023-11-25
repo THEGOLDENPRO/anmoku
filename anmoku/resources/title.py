@@ -41,4 +41,4 @@ class Title():
                 self.synonyms.append(title["title"])
 
     def __str__(self) -> str:
-        return [title["title"] for title in self.data if title["type"] == "Default"][0]
+        return self.default
