@@ -3,15 +3,21 @@ from typing import TYPE_CHECKING, TypedDict, final
 
 if TYPE_CHECKING:
     from typing import List, Literal, Any, Optional
+
     from ...mal import MALRatings
+    from ..datetime import DateRangeData
+    from ..title import TitleData
 
 __all__ = (
     "AnimeData",
     "FullAnimeData",
-    "PartialAnimeData"
+    "PartialAnimeData",
 )
 
 # NOTE: This module is subject to change. I may move some types here to a central location to be used in other types.
+
+AnimeTypesData = Literal["TV", "Movie", "ONA", "OVA", "Special", "Music"]
+AnimeAiringStatusData = Literal["Not yet aired", "Currently Airing", "Finished Airing"]
 
 class ImageData(TypedDict):
     image_url: str
@@ -28,19 +34,6 @@ class TrailerData(TypedDict):
     youtube_id: str
     url: str
     embed_url: str
-
-@final
-class TitleData(TypedDict):
-    type: Literal["Default", "Synonym", "Japanese", "English"]
-    title: str
-
-class AiredDateData(TypedDict):
-    day: int
-    month: int
-    year: int
-
-AiredPropData = TypedDict("_AiredPropData", {"from": AiredDateData, "to": AiredDateData})
-AiredData = TypedDict("AiredData", {"from": str, "to": str, "prop": AiredPropData})
 
 @final
 class BroadcastData(TypedDict):
@@ -74,19 +67,19 @@ class PartialAnimeData(TypedDict):
     images: ImagesData
     title: str
 
-class AnimeData(PartialAnimeData):
+class AnimeData(PartialAnimeData): # TODO: Redo these types but this time following the response scheme. https://docs.api.jikan.moe/#tag/anime/operation/getAnimeById
     trailer: TrailerData
     approved: bool
     titles: List[TitleData]
     title_english: str
     title_japanese: str
     title_synonyms: List[str]
-    type: Literal["TV", "Movie", "ONA", "OVA", "Special", "Music"]
+    type: Optional[AnimeTypesData]
     source: Optional[str]
-    episodes: int
-    status: Literal["Not yet aired", "Currently Airing", "Finished Airing"]
+    episodes: Optional[int]
+    status: AnimeAiringStatusData
     airing: bool
-    aired: AiredData
+    aired: DateRangeData
     duration: str
     rating: MALRatings
     score: int

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass, field
 
-from ..image import Image
+from ..helpers import Image
 from ..base import JikanResource
 
 __all__ = (

@@ -1,27 +1,25 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List, Optional, Literal
+    from typing import List, Optional
+
+    from ...typing.jikan import TitleData
 
 from dataclasses import dataclass, field
 
 __all__ = ("Title",)
 
-class TitleData(TypedDict):
-    type: Literal["Default", "Synonym", "Japanese", "English", "German", "Spanish", "French"]
-    title: str
-
-@dataclass(repr = False)
+@dataclass
 class Title():
     """A jikan title object."""
     data: List[TitleData] = field(repr = False)
 
     default: str = field(init = False)
     """The default title."""
-    english: Optional[str] = field(init = False)
+    english: Optional[str] = field(init = False, default = None)
     """The english title."""
-    japanese: Optional[str] = field(init = False)
+    japanese: Optional[str] = field(init = False, default = None)
     """The japanese title."""
     synonyms: List[str] = field(init = False)
     """A list of synonym titles."""
