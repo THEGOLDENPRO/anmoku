@@ -18,17 +18,29 @@
 - [ ] [Fully type hinted.](#type-hinting-support-) 🌌 ~~*yes you heard me correctly*~~
 
 ## It's eassssssy! 😄
+Anmoku is the simplest Jikan API wrapper you'll ever use. All you need is the client and the resource. ⛱🌊
+```python
+from anmoku import Anmoku, AnimeCharacters
+
+client = Anmoku(debug = True)
+
+anime_characters = client.get(AnimeCharacters, id = 28851) # ID for the anime film "A Silent Voice".
+
+for character in anime_characters:
+    print(f"{character.name} ({character.url})")
+
+client.close()
+```
+We also have an async client:
 ```python
 import asyncio
-from anmoku import AnimeCharacters
+from anmoku import AsyncAnmoku, AnimeCharacters
 
 async def main():
 
     client = AsyncAnmoku(debug = True)
 
-    anime_id = 28851 # ID for the anime film "A Silent Voice"
-
-    anime_characters = await client.get(AnimeCharacters, anime_id)
+    anime_characters = await client.get(AnimeCharacters, id = 28851) # ID for the anime film "A Silent Voice".
 
     for character in anime_characters:
         print(f"{character.name} ({character.url})")
