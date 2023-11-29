@@ -13,28 +13,27 @@ if TYPE_CHECKING:
         bound = JikanResource
     )
 
+from requests import Session
 from devgoldyutils import Colours
-from aiohttp import ClientSession
-from json import loads as load_json
 
 from .base import BaseClient
 
-__all__ = ("AsyncAnmoku",)
+__all__ = ("Anmoku",)
 
 
-class AsyncWrapper():
-    """Anmoku api wrapper for the async client."""
+class Wrapper():
+    """Anmoku api wrapper for the normal client."""
 
-    async def get(self: AsyncAnmoku, resource: type[A], id: Snowflake) -> A:
+    def get(self: Anmoku, resource: type[A], id: Snowflake) -> A:
         """Get's the object by id."""
         url = resource._get_endpoint.format(id = id)
 
-        json_data = await self._request(url)
+        json_data = self._request(url)
 
         return resource(json_data)
 
-class AsyncAnmoku(BaseClient, AsyncWrapper):
-    """Asynchronous Anmoku client."""
+class Anmoku(BaseClient, Wrapper):
+    """The normal synchronous Anmoku client."""
 
     __slots__ = (
         "_session",
@@ -44,14 +43,14 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         self, 
         debug: Optional[bool] = False, 
         jikan_url: Optional[str] = None,
-        session: Optional[ClientSession] = None
+        session: Optional[Session] = None
     ) -> None:
         super().__init__(debug)
 
         self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = session
 
-    async def _request(
+    def _request(
         self, 
         route: str, 
         *, 
@@ -68,16 +67,11 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
         self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
-        async with session.get(url, params = query, headers = headers) as resp:
-            content = await resp.text()
+        with session.get(url, params = query, headers = headers) as resp:
+            content = resp.json()
 
-            if resp.content_type == "application/json":
-                content = load_json(content)
-            else:
-                raise ValueError(f"Expected json response, got {resp.content_type}")
-
-            if resp.status > 400:
-                self._raise_http_error(content, resp.status)
+            if resp.status_code > 400:
+                self._raise_http_error(content, resp.status_code)
 
             return content
 
@@ -88,8 +82,8 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         await self._session.close()
         self._session = None
 
-    def __get_session(self) -> ClientSession:
+    def __get_session(self) -> Session:
         if self._session is None:
-            self._session = ClientSession()
+            self._session = Session()
 
         return self._session

@@ -44,4 +44,5 @@ target-version = "py38"
 max-complexity = 10
 
 [per-file-ignores]
+"tests/*" = ["F403", "F405"]
 "__init__.py" = ["F403"]

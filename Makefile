@@ -9,3 +9,4 @@ install-editable:
 
 test:
 	ruff .
+	python -m pytest

@@ -22,11 +22,12 @@ classifiers = [
     'Programming Language :: Python :: 3.11'
 ]
 dependencies = [
-    "requests",
     "importlib-metadata; python_version<'3.8'",
     "typing-extensions",
     "devgoldyutils>=2.5.6",
-    "aiohttp"
+    "requests",
+    "aiohttp",
+    "Pillow"
 ]
 
 dynamic = ["version"]
@@ -34,7 +35,9 @@ dynamic = ["version"]
 [project.optional-dependencies]
 dev = [
     "ruff",
-    "build"
+    "build",
+    "pytest",
+    "pytest-asyncio"
 ]
 
 [project.urls]
@@ -50,3 +53,8 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["anmoku"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]

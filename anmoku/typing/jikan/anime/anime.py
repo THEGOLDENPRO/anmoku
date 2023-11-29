@@ -30,10 +30,16 @@ class ImagesData(TypedDict):
     webp: ImageData
 
 @final
+class TrailerImageData(ImageData):
+    medium_image_url: str
+    maximum_image_url: str
+
+@final
 class TrailerData(TypedDict):
     youtube_id: str
     url: str
     embed_url: str
+    images: TrailerImageData
 
 @final
 class BroadcastData(TypedDict):

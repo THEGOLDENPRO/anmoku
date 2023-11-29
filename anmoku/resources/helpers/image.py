@@ -1,43 +1,54 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Optional
-    from typing_extensions import NotRequired
+    from ...typing.jikan import ImagesData, TrailerImagesData
 
+import io
+import requests
 from dataclasses import dataclass, field
+from PIL import Image as PillowImage
 
 __all__ = ("Image",)
-
-class ImageData(TypedDict):
-    image_url: NotRequired[Optional[str]]
-    small_image_url: NotRequired[Optional[str]]
-    large_image_url: NotRequired[Optional[str]]
-
-class ImagesData(TypedDict):
-    jpg: ImageData
-    webp: NotRequired[ImageData]
 
 @dataclass
 class Image():
     """A jikan image object."""
-    data: ImagesData = field(repr = False)
+    data: ImagesData | TrailerImagesData = field(repr = False)
 
-    url: Optional[str] = field(init = False)
+    url: Optional[str] = field(init = False, default = None)
     """The url of this image."""
 
     def __post_init__(self):
-        jpg_data = self.data.get("jpg")
+        jpg_data = self.data.get("jpg", {})
 
         image_url = jpg_data.get("image_url")
         large_image_url = jpg_data.get("large_image_url")
         small_image_url = jpg_data.get("small_image_url")
 
-        self.url = None
+        medium_image_url = self.data.get("medium_image_url")
+        maximum_image_url = self.data.get("maximum_image_url")
 
-        if large_image_url is not None:
+        if maximum_image_url is not None:
+            self.url = maximum_image_url
+        elif large_image_url is not None:
             self.url = large_image_url
+        elif medium_image_url is not None:
+            self.url = medium_image_url
         elif image_url is not None:
             self.url = image_url
         elif small_image_url is not None:
             self.url = small_image_url
+
+    def get_image(self) -> Optional[PillowImage.Image]:
+        """Makes request to the url and returns the image as a Pillow Image object."""
+        if self.url is None:
+            return None
+
+        r = requests.get(self.url)
+
+        if r.ok is False:
+            return None
+
+        return PillowImage.open(io.BytesIO(r.content))

@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 
 __all__ = ("DateRange",)
 
-@dataclass()
+@dataclass
 class DateRange():
     """A jikan date range helper."""
     data: DateRangeData = field(repr = False)

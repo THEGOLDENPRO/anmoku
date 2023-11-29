@@ -5,3 +5,4 @@ from .character import *
 from .producer import *
 from .person import *
 from .title import *
+from .image import *
