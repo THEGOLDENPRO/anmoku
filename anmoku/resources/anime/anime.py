@@ -53,6 +53,7 @@ class Trailer():
 @dataclass
 class Anime(JikanResource):
     _get_endpoint = "/anime/{id}"
+    _search_endpoint = "/anime"
 
     data: JikanResponseData[AnimeData] = field(repr=False)
 

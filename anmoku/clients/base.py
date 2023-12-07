@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from typing import Any, Mapping
 
-
 import logging
 from abc import ABC
 from devgoldyutils import LoggerAdapter

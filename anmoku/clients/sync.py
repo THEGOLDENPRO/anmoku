@@ -6,6 +6,7 @@ if TYPE_CHECKING:
     from typing import Any, Optional, TypeVar, Type
 
     from ..typing.anmoku import Snowflake
+    from ..typing.jikan import SearchResultData
     from ..resources import JikanResource
 
     A = TypeVar(
@@ -16,6 +17,9 @@ if TYPE_CHECKING:
 from requests import Session
 from devgoldyutils import Colours
 
+from .. import errors
+from ..resources.helpers import SearchResult
+
 from .base import BaseClient
 
 __all__ = ("Anmoku",)
@@ -25,12 +29,23 @@ class Wrapper():
     """Anmoku api wrapper for the normal client."""
 
     def get(self: Anmoku, resource: Type[A], id: Snowflake) -> A:
-        """Get's the object by id."""
+        """Get's the exact resource by id."""
         url = resource._get_endpoint.format(id = id)
 
         json_data = self._request(url)
 
         return resource(json_data)
+
+    def search(self: Anmoku, resource: Type[A], query: str) -> SearchResult[A]:
+        """Searches for the resource and returns a list of the results."""
+        url = resource._search_endpoint
+
+        if url is None:
+            raise errors.ResourceNotSupportedError(resource, "searching")
+
+        json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
+
+        return SearchResult(json_data, resource)
 
 class Anmoku(BaseClient, Wrapper):
     """The normal synchronous Anmoku client."""
@@ -54,7 +69,7 @@ class Anmoku(BaseClient, Wrapper):
         self, 
         route: str, 
         *, 
-        query: Optional[dict[str, Any]] = None, 
+        params: Optional[dict[str, Any]] = None, 
         headers: Optional[dict[str, str]] = None
     ) -> dict[str, Any]:
         headers = headers or {}
@@ -67,7 +82,7 @@ class Anmoku(BaseClient, Wrapper):
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
         self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
-        with session.get(url, params = query, headers = headers) as resp:
+        with session.get(url, params = params, headers = headers) as resp:
             content = resp.json()
 
             if resp.status_code > 400:

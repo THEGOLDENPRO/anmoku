@@ -1,15 +1,22 @@
 from __future__ import annotations
-
 from typing import TYPE_CHECKING, Optional, TypedDict
 
 if TYPE_CHECKING:
+    from typing import Type
+    from logging import Logger
     from typing_extensions import NotRequired
+
+    from .resources import JikanResource
+
+from .logger import anmoku_logger
+from devgoldyutils import Colours
 
 __all__ = (
     "HTTPError",
     "NotFoundError",
     "RatelimitError",
     "ServerError",
+    "ResourceNotSupportedError"
 )
 
 class ErrorResponseDict(TypedDict):
@@ -19,8 +26,18 @@ class ErrorResponseDict(TypedDict):
     error: str
     report_url: NotRequired[str]
 
+class AnmokuException(Exception):
+    def __init__(self, message: str, logger: Logger = None):
+        message = Colours.RED.apply_to_string(message)
 
-class HTTPError(Exception):
+        if logger is None:
+            logger = anmoku_logger
+
+        logger.critical(message)
+        super().__init__(message)
+
+
+class HTTPError(AnmokuException):
     __slots__ = (
         "status",
         "type",
@@ -53,3 +70,11 @@ class RatelimitError(HTTPError):
 
 class ServerError(HTTPError):
     __slots__ = ()
+
+
+class ResourceNotSupportedError(AnmokuException):
+    def __init__(self, resource: Type[JikanResource], not_supported: str, logger: Logger = None):
+        super().__init__(
+            f"The '{resource.__name__}' resource does not support {not_supported}!", 
+            logger
+        )
