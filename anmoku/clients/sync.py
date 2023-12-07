@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, TypeVar
+    from typing import Any, Optional, TypeVar, Type
 
     from ..typing.anmoku import Snowflake
     from ..resources import JikanResource
@@ -24,7 +24,7 @@ __all__ = ("Anmoku",)
 class Wrapper():
     """Anmoku api wrapper for the normal client."""
 
-    def get(self: Anmoku, resource: type[A], id: Snowflake) -> A:
+    def get(self: Anmoku, resource: Type[A], id: Snowflake) -> A:
         """Get's the object by id."""
         url = resource._get_endpoint.format(id = id)
 

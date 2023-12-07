@@ -1,14 +1,11 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, TypedDict, final
+from typing import TypedDict, final, List, TypeVar
+from typing_extensions import NotRequired
 
-if TYPE_CHECKING:
-    from typing import List, TypeVar
-    from typing_extensions import NotRequired
+from .anime import PartialAnimeData
+from .person import PartialPersonData
 
-    from .anime import PartialAnimeData
-    from .person import PartialPersonData
-
-    T = TypeVar("T")
+T = TypeVar("T")
 
 __all__ = (
     "CharacterData",

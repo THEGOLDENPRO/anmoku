@@ -1,10 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, TypedDict, final
-
-if TYPE_CHECKING:
-    from typing import List
-    from ..character import PartialCharacterData
-    from ..person import PartialPersonData
+from typing import TypedDict, final, List
+from ..character import PartialCharacterData
+from ..person import PartialPersonData
 
 __all__ = (
     "AnimeCharacterData",

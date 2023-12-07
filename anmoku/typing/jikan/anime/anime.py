@@ -1,12 +1,11 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, TypedDict, final
-
-if TYPE_CHECKING:
-    from typing import List, Literal, Any, Optional
-
-    from ...mal import MALRatings
-    from ..datetime import DateRangeData
-    from ..title import TitleData
+from typing import (
+    TypedDict, final, 
+    List, Literal, Any, Optional
+)
+from ...mal import MALRatings
+from ..datetime import DateRangeData
+from ..title import TitleData
 
 __all__ = (
     "AnimeData",

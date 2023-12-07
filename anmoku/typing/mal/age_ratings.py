@@ -1,7 +1,4 @@
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Literal
+from typing import Literal
 
 __all__ = (
     "MALRatings",

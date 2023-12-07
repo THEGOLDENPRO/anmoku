@@ -1,9 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, TypedDict
-
-if TYPE_CHECKING:
-    from typing import Optional, final
-    from typing_extensions import NotRequired
+from typing import TypedDict, final, Optional
+from typing_extensions import NotRequired
 
 __all__ = (
     "TrailerImagesData",
