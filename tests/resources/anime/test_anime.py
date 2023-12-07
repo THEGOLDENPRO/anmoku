@@ -16,4 +16,5 @@ async def test_anime():
 
 @pytest.mark.asyncio
 async def test_anime_rate_limit():
+    # TODO: Add test here when rate limiting is implemented.
     ...
