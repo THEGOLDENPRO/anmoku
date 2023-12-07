@@ -13,3 +13,7 @@ async def test_anime():
         anime = await client.get(Anime, id)
 
         print(anime)
+
+@pytest.mark.asyncio
+async def test_anime_rate_limit():
+    ...

@@ -75,11 +75,11 @@ class Anmoku(BaseClient, Wrapper):
 
             return content
 
-    async def close(self) -> None:
+    def close(self) -> None:
         if self._session is None:
             return
         
-        await self._session.close()
+        self._session.close()
         self._session = None
 
     def __get_session(self) -> Session:
