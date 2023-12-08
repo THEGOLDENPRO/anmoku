@@ -28,7 +28,7 @@ class Character(JikanResource):
     url: str = field(init = False)
     """The MyAnimeList URL to this character."""
     image: Image = field(init = False)
-    """The banner image of the anime."""
+    """The image of this character."""
     name: Name = field(init = False)
     """The name of the character."""
     nicknames: List[str] = field(init = False)
