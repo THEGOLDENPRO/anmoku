@@ -55,12 +55,12 @@ class Anime(JikanResource):
     _get_endpoint = "/anime/{id}"
     _search_endpoint = "/anime"
 
-    data: JikanResponseData[AnimeData] = field(repr=False)
+    data: JikanResponseData[AnimeData] = field(repr = False)
 
     id: int = field(init = False)
     """The MyAnimeList ID of the anime."""
     url: str = field(init = False)
-    """The MyAnimeList URL of the anime."""
+    """The MyAnimeList URL to this anime."""
     image: Image = field(init = False)
     """The banner image of the anime."""
     trailer: Trailer = field(init = False)
@@ -109,7 +109,8 @@ class Anime(JikanResource):
         self.aired = DateRange(anime["aired"])
 
 @dataclass
-class FullAnime(Anime):
+class FullAnime(Anime): # TODO: Finish this. You can use the FullAnimeData type dict to help.
     _get_endpoint = "/anime/{id}/full"
+    _search_endpoint = None
 
     data: JikanResponseData[FullAnimeData] = field(repr=False)

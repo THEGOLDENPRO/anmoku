@@ -107,7 +107,7 @@ class AnimeData(PartialAnimeData): # TODO: Redo these types but this time follow
     demographics: List[EntryData]
 
 @final
-class FullAnimeData(AnimeData): # TODO: Finish this.
+class FullAnimeData(AnimeData):
     relations: List[RelationData]
     theme: ThemeData
     external: List[ExternalSourceData]

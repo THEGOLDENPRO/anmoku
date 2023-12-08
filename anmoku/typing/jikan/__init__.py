@@ -7,3 +7,4 @@ from .person import *
 from .title import *
 from .image import *
 from .search_result import *
+from .name import *

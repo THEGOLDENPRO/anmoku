@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 import io
 import requests
-from devgoldyutils import LoggerAdapter
 from dataclasses import dataclass, field
 from PIL import Image as PillowImage
 
