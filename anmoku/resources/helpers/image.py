@@ -7,8 +7,11 @@ if TYPE_CHECKING:
 
 import io
 import requests
+from devgoldyutils import LoggerAdapter
 from dataclasses import dataclass, field
 from PIL import Image as PillowImage
+
+from ... import logger
 
 __all__ = ("Image",)
 
@@ -46,6 +49,7 @@ class Image():
         if self.url is None:
             return None
 
+        logger.log_http_request("GET", self.url)
         r = requests.get(self.url)
 
         if r.ok is False:

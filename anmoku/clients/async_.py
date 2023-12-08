@@ -15,11 +15,10 @@ if TYPE_CHECKING:
         bound = JikanResource
     )
 
-from devgoldyutils import Colours
 from aiohttp import ClientSession
 from json import loads as load_json
 
-from .. import errors
+from .. import errors, logger
 from ..resources.helpers import SearchResult
 
 from .base import BaseClient
@@ -82,7 +81,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
+        logger.log_http_request("GET", url, logger = self.logger)
 
         async with session.get(url, params = params, headers = headers) as resp:
             content = await resp.text()

@@ -15,9 +15,8 @@ if TYPE_CHECKING:
     )
 
 from requests import Session
-from devgoldyutils import Colours
 
-from .. import errors
+from .. import errors, logger
 from ..resources.helpers import SearchResult
 
 from .base import BaseClient
@@ -80,7 +79,7 @@ class Anmoku(BaseClient, Wrapper):
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
+        logger.log_http_request("GET", url, logger = self.logger)
 
         with session.get(url, params = params, headers = headers) as resp:
             content = resp.json()
