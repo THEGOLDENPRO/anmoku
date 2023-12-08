@@ -77,7 +77,7 @@ for character in characters:
 client.close()
 ```
 Merge that with gradio and you have a GUI.
-https://github.com/THEGOLDENPRO/anmoku/blob/d0a42663c1ee29087d42645d483cf4d49f004e91/examples/gradio_anime_search.py#L1-L24
+https://github.com/THEGOLDENPRO/anmoku/blob/099f6596b685daa65259319d6730bef674ced38a/examples/gradio_anime_search.py#L1-L23
 
 [[Gradio Video]](https://github.com/THEGOLDENPRO/anmoku/assets/66202304/75c9c35c-bf68-4c53-96e5-057dc97ca1dd)
 
