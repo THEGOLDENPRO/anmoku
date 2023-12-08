@@ -56,6 +56,7 @@ class Character(JikanResource):
 @dataclass
 class FullCharacter(Character): # TODO: finish this.
     _get_endpoint = "/characters/{id}/full"
-    _search_endpoint = None
+    # NOTE: Seems like full versions don't get returned by the search endpoint.
+    _search_endpoint = None 
 
     data: JikanResponseData[FullCharacterData]
