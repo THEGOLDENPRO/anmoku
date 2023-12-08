@@ -8,7 +8,6 @@ def search_anime(query: str):
 
     try:
         anime_list = client.search(Anime, query)
-
     except RatelimitError as e: # NOTE: This is here because rate limiting hasn't been implemented yet in this version.
         raise gradio.Error(e.message)
 
