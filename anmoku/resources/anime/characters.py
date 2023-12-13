@@ -5,12 +5,7 @@ if TYPE_CHECKING:
     from typing import List
     from ...typing.jikan import (
         AnimeCharacterData, 
-        JikanResponseData, 
-
-        # NOTE: Temporary
-        # ----------------
-        PartialPersonData,
-        PartialCharacterData
+        JikanResponseData
     )
 
     from ...typing.jikan.anime.characters import VoiceActorData
@@ -28,37 +23,55 @@ __all__ = (
 class VoiceActor():
     data: VoiceActorData
 
-    person: PartialPersonData = field(init = False) # TODO: Change this to actual person class.
+    id: int = field(init = False)
+    """The MyAnimeList ID of this voice actor."""
+    url: str = field(init = False)
+    """The MyAnimeList URL to this voice actor."""
+    name: str = field(init = False)
+    """The name of this voice actor."""
+    image: Image = field(init = False)
+    """The image of this voice actor."""
+
     language: str = field(init = False)
+    """The language they are voice acting in."""
 
     def __post_init__(self):
-        self.person = self.data.get("person")
-        self.language = self.data.get("language")
+        person = self.data["person"]
+
+        self.id = person["mal_id"]
+        self.url = person["url"]
+        self.name = person["name"]
+        self.image = Image(person["images"])
+        self.language = self.data["language"]
 
 @dataclass
 class AnimeCharacter():
     data: AnimeCharacterData
 
-    partial_character: PartialCharacterData = field(init = False) # TODO: Change this to actual character class.
-    role: str = field(init = False)
-    voice_actors: List[VoiceActor] = field(init = False)
-
     id: int = field(init = False)
+    """The MyAnimeList ID of this character."""
     name: str = field(init = False)
+    """The name of this character."""
     url: str = field(init = False)
+    """The MyAnimeList URL to this character."""
     image: Image = field(init = False)
+    """The image of this character."""
+
+    role: str = field(init = False)
+    """The character's role."""
+    voice_actors: List[VoiceActor] = field(init = False)
+    """The list of voice actors who acted this character."""
 
     def __post_init__(self):
-        character = self.data.get("character")
-
-        self.partial_character = character # TODO: Change this to actual character class.
-        self.role = self.data.get("role")
-        self.voice_actors = [VoiceActor(actor) for actor in self.data.get("voice_actors", [])]
+        character = self.data["character"]
 
         self.id = character["mal_id"]
         self.name = character["name"]
         self.url = character["url"]
         self.image = Image(character["images"])
+
+        self.role = self.data["role"]
+        self.voice_actors = [VoiceActor(actor) for actor in self.data.get("voice_actors", [])]
 
 @dataclass
 class AnimeCharacters(JikanResource):

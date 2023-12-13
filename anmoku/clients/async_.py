@@ -1,19 +1,13 @@
 from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, TypeVar, Type
+    from typing import Any, Optional, Type
 
     from ..typing.anmoku import Snowflake
     from ..typing.jikan import SearchResultData
 
-    from ..resources import JikanResource
-
-    A = TypeVar(
-        "A", 
-        bound = JikanResource
-    )
+    from .base import ResourceGenericT, SearchResourceGenericT
 
 from aiohttp import ClientSession
 from json import loads as load_json
@@ -29,7 +23,7 @@ __all__ = ("AsyncAnmoku",)
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
 
-    async def get(self: AsyncAnmoku, resource: Type[A], id: Snowflake) -> A:
+    async def get(self: AsyncAnmoku, resource: Type[ResourceGenericT], id: Snowflake) -> ResourceGenericT:
         """Get's the exact resource by id."""
         url = resource._get_endpoint.format(id = id)
 
@@ -37,7 +31,7 @@ class AsyncWrapper():
 
         return resource(json_data)
 
-    async def search(self: AsyncAnmoku, resource: Type[A], query: str) -> SearchResult[A]:
+    async def search(self: AsyncAnmoku, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
         url = resource._search_endpoint
 

@@ -2,7 +2,19 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from typing import Any, Mapping
+    from typing import Any, Mapping, TypeVar
+    from .. import resources as r
+
+    ResourceGenericT = TypeVar(
+        "ResourceGenericT", 
+        bound = r.JikanResource
+    )
+
+    SearchResourceGenericT = TypeVar(
+        "SearchResourceGenericT", 
+        r.Anime, 
+        r.Character,
+    )
 
 import logging
 from abc import ABC

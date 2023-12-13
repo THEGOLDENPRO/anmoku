@@ -1,18 +1,13 @@
 from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, TypeVar, Type
+    from typing import Any, Optional, Type
 
     from ..typing.anmoku import Snowflake
     from ..typing.jikan import SearchResultData
-    from ..resources import JikanResource
 
-    A = TypeVar(
-        "A", 
-        bound = JikanResource
-    )
+    from .base import ResourceGenericT, SearchResourceGenericT
 
 from requests import Session
 
@@ -27,7 +22,7 @@ __all__ = ("Anmoku",)
 class Wrapper():
     """Anmoku api wrapper for the normal client."""
 
-    def get(self: Anmoku, resource: Type[A], id: Snowflake) -> A:
+    def get(self: Anmoku, resource: Type[ResourceGenericT], id: Snowflake) -> ResourceGenericT:
         """Get's the exact resource by id."""
         url = resource._get_endpoint.format(id = id)
 
@@ -35,7 +30,7 @@ class Wrapper():
 
         return resource(json_data)
 
-    def search(self: Anmoku, resource: Type[A], query: str) -> SearchResult[A]:
+    def search(self: Anmoku, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
         url = resource._search_endpoint
 
@@ -92,7 +87,7 @@ class Anmoku(BaseClient, Wrapper):
     def close(self) -> None:
         if self._session is None:
             return
-        
+
         self._session.close()
         self._session = None
 

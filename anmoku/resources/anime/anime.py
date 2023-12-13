@@ -111,6 +111,5 @@ class Anime(JikanResource):
 @dataclass
 class FullAnime(Anime): # TODO: Finish this. You can use the FullAnimeData type dict to help.
     _get_endpoint = "/anime/{id}/full"
-    _search_endpoint = None
 
     data: JikanResponseData[FullAnimeData] = field(repr=False)
