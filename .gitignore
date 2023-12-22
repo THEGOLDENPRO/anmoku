@@ -1,5 +1,5 @@
 __pycache__
-anmoku.egg-info
+*.egg-info
 .ruff_cache
 .pytest_cache
 build
