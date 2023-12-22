@@ -21,7 +21,7 @@ __all__ = (
 
 @dataclass
 class VoiceActor():
-    data: VoiceActorData
+    data: VoiceActorData = field(repr = False)
 
     id: int = field(init = False)
     """The MyAnimeList ID of this voice actor."""
@@ -46,7 +46,7 @@ class VoiceActor():
 
 @dataclass
 class AnimeCharacter():
-    data: AnimeCharacterData
+    data: AnimeCharacterData = field(repr = False)
 
     id: int = field(init = False)
     """The MyAnimeList ID of this character."""
