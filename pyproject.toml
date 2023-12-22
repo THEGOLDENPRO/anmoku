@@ -48,11 +48,11 @@ BugTracker = "https://github.com/THEGOLDENPRO/anmoku/issues"
 version = { attr = "anmoku.__version__" }
 
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["anmoku"]
+[tool.setuptools.packages.find]
+include = ["anmoku*"]
 
 [tool.pytest.ini_options]
 addopts = [
