@@ -18,7 +18,7 @@
 - [ ] [Fully type hinted.](#type-hinting-support-) 🌌 ~~*yes you heard me correctly*~~
 
 ## Examples ⚗️
-Anmoku is probably the simplest Jikan API wrapper you'll ever use. All you need is the client and the resource. ⛱🌊
+Anmoku is probably the simplest Jikan API wrapper you'll ever use. All you need is the client and the resource. 🌊
 ```python
 from anmoku import Anmoku, AnimeCharacters
 
