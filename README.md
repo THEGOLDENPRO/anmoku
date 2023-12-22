@@ -88,4 +88,5 @@ API responses in our library are strongly typed.
 
 On top of that, we even provide class interfaces if you wish for stability and ease of use.
 
+<img src="./assets/type_hints_3.png" width="100%">
 <img src="./assets/type_hints_2.png" width="100%">
