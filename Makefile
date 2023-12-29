@@ -1,5 +1,7 @@
+.PHONY: build
+
 build:
-	python -m build
+	python -m build --wheel
 
 install:
 	pip install . -U
