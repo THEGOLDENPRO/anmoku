@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
     from .base import ResourceGenericT, SearchResourceGenericT
 
+from devgoldyutils import Colours
 from aiohttp import ClientSession
-from json import loads as load_json
 
 from .. import errors, logger
 from ..resources.helpers import SearchResult
@@ -18,7 +18,6 @@ from ..resources.helpers import SearchResult
 from .base import BaseClient
 
 __all__ = ("AsyncAnmoku",)
-
 
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
@@ -51,14 +50,17 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
 
     def __init__(
         self, 
-        debug: Optional[bool] = False, 
-        jikan_url: Optional[str] = None,
-        session: Optional[ClientSession] = None
+        debug: bool = False, 
+        session: Optional[ClientSession] = None,
+        jikan_url: str = "https://api.jikan.moe/v4",
+        max_retries: int = 10,
+        wait: bool = True
     ) -> None:
-        super().__init__(debug)
+        super().__init__(debug, wait, max_retries)
 
-        self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = session
+
+        self.jikan_url = jikan_url
 
     async def _request(
         self, 
@@ -78,14 +80,16 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         logger.log_http_request("GET", url, logger = self.logger)
 
         async with session.get(url, params = params, headers = headers) as resp:
-            content = await resp.text()
+            content = await resp.json()
 
-            if resp.content_type == "application/json":
-                content = load_json(content)
-            else:
-                raise ValueError(f"Expected json response, got {resp.content_type}")
+            if self.wait:
+                await self._rate_limit_handler.async_wait_for_rate_limit()
 
-            if resp.status > 400:
+            if self._retry(resp.status):
+                self.logger.debug(f"{Colours.GREY.apply('Retrying')} request to '{url}'...")
+                content = await self._request(route, params = params, headers = headers)
+
+            elif resp.status > 400:
                 self._raise_http_error(content, resp.status)
 
             return content

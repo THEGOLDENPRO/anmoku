@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Optional
 
 if TYPE_CHECKING:
     from typing import Any, Mapping, TypeVar
@@ -21,10 +21,10 @@ from abc import ABC
 from devgoldyutils import LoggerAdapter
 
 from ..logger import anmoku_logger
+from .rate_limiting import RateLimitHandler
 from ..errors import ErrorResponseDict, NotFoundError, RatelimitError, ServerError, HTTPError
 
 __all__ = ("BaseClient",)
-
 
 class BaseClient(ABC):
     """Base class all clients will inherit from."""
@@ -34,12 +34,26 @@ class BaseClient(ABC):
         "cache",
     )
 
-    def __init__(self, debug: bool = False) -> None:
+    def __init__(
+        self, 
+        debug: bool, 
+        wait: bool, 
+        max_retries: int, 
+        requests_per_second_limit: Optional[int] = None, 
+        requests_per_minute_limit: Optional[int] = None
+    ) -> None:
 
         if debug is True:
             anmoku_logger.setLevel(logging.DEBUG)
 
         self.logger = LoggerAdapter(anmoku_logger, prefix = self.__class__.__name__)
+
+        self.wait = wait
+        self.max_retries = max_retries
+
+        self._rate_limit_handler = RateLimitHandler(requests_per_second_limit, requests_per_minute_limit)
+
+        self.__retries = 0
 
         super().__init__()
 
@@ -54,3 +68,11 @@ class BaseClient(ABC):
             raise ServerError(data)
 
         raise HTTPError(data)
+
+    def _retry(self, status_code: int) -> bool:
+        if self.wait and status_code == 429 and not self.__retries >= self.max_retries:
+            self.__retries += 1
+            return True
+
+        self.__retries = 0
+        return False

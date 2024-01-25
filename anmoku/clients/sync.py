@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from .base import ResourceGenericT, SearchResourceGenericT
 
 from requests import Session
+from devgoldyutils import Colours
 
 from .. import errors, logger
 from ..resources.helpers import SearchResult
@@ -17,7 +18,6 @@ from ..resources.helpers import SearchResult
 from .base import BaseClient
 
 __all__ = ("Anmoku",)
-
 
 class Wrapper():
     """Anmoku api wrapper for the normal client."""
@@ -50,14 +50,17 @@ class Anmoku(BaseClient, Wrapper):
 
     def __init__(
         self, 
-        debug: Optional[bool] = False, 
-        jikan_url: Optional[str] = None,
-        session: Optional[Session] = None
+        debug: bool = False, 
+        session: Optional[Session] = None,
+        jikan_url: str = "https://api.jikan.moe/v4",
+        max_retries: int = 10,
+        wait: bool = True
     ) -> None:
-        super().__init__(debug)
+        super().__init__(debug, wait, max_retries)
 
-        self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = session
+
+        self.jikan_url = jikan_url
 
     def _request(
         self, 
@@ -79,7 +82,14 @@ class Anmoku(BaseClient, Wrapper):
         with session.get(url, params = params, headers = headers) as resp:
             content = resp.json()
 
-            if resp.status_code > 400:
+            if self.wait:
+                self._rate_limit_handler.wait_for_rate_limit()
+
+            if self._retry(resp.status_code):
+                self.logger.debug(f"{Colours.GREY.apply('Retrying')} request to '{url}'...")
+                content = self._request(route, params = params, headers = headers)
+
+            elif resp.status_code > 400:
                 self._raise_http_error(content, resp.status_code)
 
             return content
