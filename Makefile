@@ -3,7 +3,7 @@
 python = python
 
 build:
-	${python} -m build --wheel
+	${python} -m build
 
 pip = pip
 
