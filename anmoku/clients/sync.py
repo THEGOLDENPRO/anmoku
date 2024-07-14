@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any, Optional, Type
 
-    from ..typing.anmoku import Snowflake
+    from ..typing.anmoku import SnowflakeT
     from ..typing.jikan import SearchResultData
 
     from .base import ResourceGenericT, SearchResourceGenericT
@@ -19,33 +19,14 @@ from ..errors import ResourceNotSupportedError
 
 __all__ = ("Anmoku",)
 
-class Wrapper():
-    """Anmoku api wrapper for the normal client."""
-
-    def get(self: Anmoku, resource: Type[ResourceGenericT], id: Snowflake) -> ResourceGenericT:
-        """Get's the exact resource by id."""
-        url = resource._get_endpoint.format(id = id)
-
-        json_data = self._request(url)
-
-        return resource(json_data)
-
-    def search(self: Anmoku, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
-        """Searches for the resource and returns a list of the results."""
-        url = resource._search_endpoint
-
-        if url is None:
-            raise ResourceNotSupportedError(resource, "searching")
-
-        json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
-
-        return SearchResult(json_data, resource)
-
-class Anmoku(BaseClient, Wrapper):
+class Anmoku(BaseClient):
     """The normal synchronous Anmoku client. Uses requests for http and [slowstack](https://github.com/TAG-Epic/slowstack) for rate limiting."""
 
     __slots__ = (
         "_session",
+        "jikan_url",
+        "_second_rate_limiter",
+        "_minute_rate_limiter"
     )
 
     def __init__(
@@ -61,7 +42,26 @@ class Anmoku(BaseClient, Wrapper):
 
         # https://docs.api.jikan.moe/#section/Information/Rate-Limiting
         self._second_rate_limiter = TimesPerRateLimiter(3, 3)
-        self._minute_rate_limiter = TimesPerRateLimiter(60, 60) 
+        self._minute_rate_limiter = TimesPerRateLimiter(60, 60)
+
+    def get(self, resource: Type[ResourceGenericT], id: SnowflakeT) -> ResourceGenericT:
+        """Get's the exact resource by id."""
+        url = resource._get_endpoint.format(id = id)
+
+        json_data = self._request(url)
+
+        return resource(json_data)
+
+    def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
+        """Searches for the resource and returns a list of the results."""
+        url = resource._search_endpoint
+
+        if url is None:
+            raise ResourceNotSupportedError(resource, "searching")
+
+        json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
+
+        return SearchResult(json_data, resource)
 
     def _request(
         self, 

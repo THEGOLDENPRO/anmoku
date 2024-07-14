@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any, Optional, Type, Dict
 
-    from ..typing.anmoku import Snowflake
+    from ..typing.anmoku import SnowflakeT
     from ..typing.jikan import SearchResultData
 
     from .base import ResourceGenericT, SearchResourceGenericT
@@ -21,33 +21,13 @@ from ..errors import ResourceNotSupportedError
 
 __all__ = ("AsyncAnmoku",)
 
-class AsyncWrapper():
-    """Anmoku api wrapper for the async client."""
-
-    async def get(self: AsyncAnmoku, resource: Type[ResourceGenericT], id: Snowflake) -> ResourceGenericT:
-        """Get's the exact resource by id."""
-        url = resource._get_endpoint.format(id = id)
-
-        json_data = await self._request(url)
-
-        return resource(json_data)
-
-    async def search(self: AsyncAnmoku, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
-        """Searches for the resource and returns a list of the results."""
-        url = resource._search_endpoint
-
-        if url is None:
-            raise ResourceNotSupportedError(resource, "searching")
-
-        json_data: SearchResultData[Any] = await self._request(url, params = {"q": query})
-
-        return SearchResult(json_data, resource)
-
-class AsyncAnmoku(BaseClient, AsyncWrapper):
-    """Asynchronous anmoku client. Uses aiohttp for http and [slowstack](https://github.com/TAG-Epic/slowstack) for ratelimiting."""
+class AsyncAnmoku(BaseClient):
+    """Asynchronous anmoku client. Uses aiohttp for http and [slowstack](https://github.com/TAG-Epic/slowstack) for rate-limiting."""
 
     __slots__ = (
         "_session",
+        "jikan_url",
+        "_rate_limiter"
     )
 
     def __init__(
@@ -68,6 +48,25 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
                 TimesPerRateLimiter(60, 60)
             }
         )
+
+    async def get(self, resource: Type[ResourceGenericT], id: SnowflakeT) -> ResourceGenericT:
+        """Get's the exact resource by id."""
+        url = resource._get_endpoint.format(id = id)
+
+        json_data = await self._request(url)
+
+        return resource(json_data)
+
+    async def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
+        """Searches for the resource and returns a list of the results."""
+        url = resource._search_endpoint
+
+        if url is None:
+            raise ResourceNotSupportedError(resource, "searching")
+
+        json_data: SearchResultData[Any] = await self._request(url, params = {"q": query})
+
+        return SearchResult(json_data, resource)
 
     async def _request(
         self, 

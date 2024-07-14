@@ -2,22 +2,25 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from typing import Any, Mapping, TypeVar
-    from .. import resources as r
+    from typing import Any, Mapping, TypeVar, Type
+
+    from .. import resources
+    from ..typing.anmoku import SnowflakeT
+    from ..resources.helpers import SearchResult
 
     ResourceGenericT = TypeVar(
         "ResourceGenericT", 
-        bound = r.JikanResource
+        bound = resources.JikanResource
     )
 
     SearchResourceGenericT = TypeVar(
         "SearchResourceGenericT", 
-        r.Anime, 
-        r.Character,
+        resources.Anime, 
+        resources.Character,
     )
 
 import logging
-from abc import ABC
+from abc import ABC, abstractmethod
 from devgoldyutils import LoggerAdapter
 
 from ..logger import anmoku_logger
@@ -43,6 +46,16 @@ class BaseClient(ABC):
             self.logger.setLevel(logging.DEBUG)
 
         super().__init__()
+
+    @abstractmethod
+    def get(self, resource: Type[ResourceGenericT], id: SnowflakeT) -> ResourceGenericT:
+        """Get's the exact resource by id."""
+        ...
+
+    @abstractmethod
+    def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
+        """Searches for the resource and returns a list of the results."""
+        ...
 
     def _raise_http_error(self, data: Mapping[str, Any], status: int):
         data = cast(ErrorResponseDict, data)
