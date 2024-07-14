@@ -4,4 +4,4 @@ target-version = "py38"
 
 [lint.per-file-ignores]
 "__init__.py" = ["F403"]
-"tests/*" = ["F405", "F403"]
+"tests/*" = ["F405", "F403", "F811"]

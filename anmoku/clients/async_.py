@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Type
+    from typing import Any, Optional, Type, Dict
 
     from ..typing.anmoku import Snowflake
     from ..typing.jikan import SearchResultData
@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 from aiohttp import ClientSession
 from devgoldyutils import Colours
 from json import loads as load_json
+from slowstack.asynchronous.all import AllRateLimiter
+from slowstack.asynchronous.times_per import TimesPerRateLimiter
 
 from .base import BaseClient
 from ..resources.helpers import SearchResult
@@ -42,7 +44,7 @@ class AsyncWrapper():
         return SearchResult(json_data, resource)
 
 class AsyncAnmoku(BaseClient, AsyncWrapper):
-    """Asynchronous Anmoku client."""
+    """Asynchronous anmoku client. Uses aiohttp for http and [slowstack](https://github.com/TAG-Epic/slowstack) for ratelimiting."""
 
     __slots__ = (
         "_session",
@@ -59,33 +61,40 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = session
 
+        # https://docs.api.jikan.moe/#section/Information/Rate-Limiting
+        self._rate_limiter = AllRateLimiter(
+            {
+                TimesPerRateLimiter(3, 3), 
+                TimesPerRateLimiter(60, 60)
+            }
+        )
+
     async def _request(
         self, 
         route: str, 
         *, 
         params: Optional[dict[str, Any]] = None, 
         headers: Optional[dict[str, str]] = None
-    ) -> dict[str, Any]:
+    ) -> Dict[str, Any]:
         headers = headers or {}
 
         session = self.__get_session()
         url = self.jikan_url + route
 
-        # TODO: rate limits
-        # There are two rate limits: 3 requests per second and 60 requests per minute.
-        # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
+        async with self._rate_limiter.acquire():
 
-        async with session.get(url, params = params, headers = headers) as resp:
-            content = await resp.text()
+            self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
-            if resp.content_type == "application/json":
+            async with session.get(url, params = params, headers = headers) as resp:
+                content = await resp.text()
+
+                if not resp.content_type == "application/json":
+                    raise ValueError(f"Expected json response, got '{resp.content_type}'.")
+
                 content = load_json(content)
-            else:
-                raise ValueError(f"Expected json response, got '{resp.content_type}'.")
 
-            if resp.status > 400:
-                self._raise_http_error(content, resp.status)
+                if resp.status > 400:
+                    self._raise_http_error(content, resp.status)
 
             return content
 

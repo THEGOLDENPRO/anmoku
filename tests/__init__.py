@@ -1,9 +1,39 @@
+from __future__ import annotations
+
+import time
 import pytest
-from anmoku.clients import AsyncAnmoku
+from anmoku.clients import AsyncAnmoku, Anmoku
+
+from slowstack.asynchronous.all import AllRateLimiter
+from slowstack.asynchronous.times_per import TimesPerRateLimiter
 
 __all__ = (
     "pytest",
-    "client"
+    "client",
+    "async_client",
+    "wait_after"
 )
 
-client = AsyncAnmoku(debug = True)
+client = Anmoku(debug = True)
+client._minute_rate_limiter.limit = 30
+
+async_client = AsyncAnmoku(debug = True)
+async_client._rate_limiter = AllRateLimiter(
+    {
+        TimesPerRateLimiter(3, 3), 
+        TimesPerRateLimiter(30, 60) # half the 
+    }
+)
+
+def wait_after(seconds: int):
+
+    def outer(func):
+
+        def inner(*args, **kwargs) -> None:
+            func(*args, **kwargs)
+
+            time.sleep(seconds)
+
+        return inner
+
+    return outer

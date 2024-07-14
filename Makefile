@@ -15,4 +15,4 @@ install-editable:
 
 test:
 	ruff check .
-	pytest
+	pytest -v
