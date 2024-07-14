@@ -10,14 +10,14 @@ if TYPE_CHECKING:
     from .base import ResourceGenericT, SearchResourceGenericT
 
 from requests import Session
-
-from .. import errors, logger
-from ..resources.helpers import SearchResult
+from devgoldyutils import Colours
+from slowstack.synchronous.times_per import TimesPerRateLimiter
 
 from .base import BaseClient
+from ..resources.helpers import SearchResult
+from ..errors import ResourceNotSupportedError
 
 __all__ = ("Anmoku",)
-
 
 class Wrapper():
     """Anmoku api wrapper for the normal client."""
@@ -35,14 +35,14 @@ class Wrapper():
         url = resource._search_endpoint
 
         if url is None:
-            raise errors.ResourceNotSupportedError(resource, "searching")
+            raise ResourceNotSupportedError(resource, "searching")
 
         json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
 
         return SearchResult(json_data, resource)
 
 class Anmoku(BaseClient, Wrapper):
-    """The normal synchronous Anmoku client."""
+    """The normal synchronous Anmoku client. Uses requests for http and [slowstack](https://github.com/TAG-Epic/slowstack) for rate limiting."""
 
     __slots__ = (
         "_session",
@@ -59,6 +59,10 @@ class Anmoku(BaseClient, Wrapper):
         self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = session
 
+        # https://docs.api.jikan.moe/#section/Information/Rate-Limiting
+        self._second_rate_limiter = TimesPerRateLimiter(3, 3)
+        self._minute_rate_limiter = TimesPerRateLimiter(60, 60) 
+
     def _request(
         self, 
         route: str, 
@@ -71,18 +75,22 @@ class Anmoku(BaseClient, Wrapper):
         session = self.__get_session()
         url = self.jikan_url + route
 
-        # TODO: rate limits
-        # There are two rate limits: 3 requests per second and 60 requests per minute.
-        # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        logger.log_http_request("GET", url, logger = self.logger)
+        self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
-        with session.get(url, params = params, headers = headers) as resp:
-            content = resp.json()
+        # 'AllRateLimiter' doesn't exist yet for the synchronous portion of slowstack so I '.acquire' for both rate-limiters instead.
+        with self._minute_rate_limiter.acquire():
 
-            if resp.status_code > 400:
-                self._raise_http_error(content, resp.status_code)
+            with self._second_rate_limiter.acquire():
 
-            return content
+                self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
+
+                with session.get(url, params = params, headers = headers) as resp:
+                    content = resp.json()
+
+                    if resp.status_code > 400:
+                        self._raise_http_error(content, resp.status_code)
+
+                return content
 
     def close(self) -> None:
         if self._session is None:

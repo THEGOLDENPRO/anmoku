@@ -35,11 +35,12 @@ class BaseClient(ABC):
     )
 
     def __init__(self, debug: bool = False) -> None:
+        self.logger = LoggerAdapter(
+            anmoku_logger, prefix = self.__class__.__name__
+        )
 
         if debug is True:
-            anmoku_logger.setLevel(logging.DEBUG)
-
-        self.logger = LoggerAdapter(anmoku_logger, prefix = self.__class__.__name__)
+            self.logger.setLevel(logging.DEBUG)
 
         super().__init__()
 
