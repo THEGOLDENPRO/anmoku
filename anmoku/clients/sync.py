@@ -10,14 +10,13 @@ if TYPE_CHECKING:
     from .base import ResourceGenericT, SearchResourceGenericT
 
 from requests import Session
-
-from .. import errors, logger
-from ..resources.helpers import SearchResult
+from devgoldyutils import Colours
 
 from .base import BaseClient
+from ..resources.helpers import SearchResult
+from ..errors import ResourceNotSupportedError
 
 __all__ = ("Anmoku",)
-
 
 class Wrapper():
     """Anmoku api wrapper for the normal client."""
@@ -35,7 +34,7 @@ class Wrapper():
         url = resource._search_endpoint
 
         if url is None:
-            raise errors.ResourceNotSupportedError(resource, "searching")
+            raise ResourceNotSupportedError(resource, "searching")
 
         json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
 
@@ -74,7 +73,7 @@ class Anmoku(BaseClient, Wrapper):
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        logger.log_http_request("GET", url, logger = self.logger)
+        self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
         with session.get(url, params = params, headers = headers) as resp:
             content = resp.json()

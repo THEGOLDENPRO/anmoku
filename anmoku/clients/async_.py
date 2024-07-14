@@ -10,15 +10,14 @@ if TYPE_CHECKING:
     from .base import ResourceGenericT, SearchResourceGenericT
 
 from aiohttp import ClientSession
+from devgoldyutils import Colours
 from json import loads as load_json
 
-from .. import errors, logger
-from ..resources.helpers import SearchResult
-
 from .base import BaseClient
+from ..resources.helpers import SearchResult
+from ..errors import ResourceNotSupportedError
 
 __all__ = ("AsyncAnmoku",)
-
 
 class AsyncWrapper():
     """Anmoku api wrapper for the async client."""
@@ -36,7 +35,7 @@ class AsyncWrapper():
         url = resource._search_endpoint
 
         if url is None:
-            raise errors.ResourceNotSupportedError(resource, "searching")
+            raise ResourceNotSupportedError(resource, "searching")
 
         json_data: SearchResultData[Any] = await self._request(url, params = {"q": query})
 
@@ -75,7 +74,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
         # TODO: rate limits
         # There are two rate limits: 3 requests per second and 60 requests per minute.
         # In order to comply, we need to check the 60 requests per minute bucket first, then the 3 requests per second one.
-        logger.log_http_request("GET", url, logger = self.logger)
+        self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
         async with session.get(url, params = params, headers = headers) as resp:
             content = await resp.text()
@@ -83,7 +82,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
             if resp.content_type == "application/json":
                 content = load_json(content)
             else:
-                raise ValueError(f"Expected json response, got {resp.content_type}")
+                raise ValueError(f"Expected json response, got '{resp.content_type}'.")
 
             if resp.status > 400:
                 self._raise_http_error(content, resp.status)
@@ -93,7 +92,7 @@ class AsyncAnmoku(BaseClient, AsyncWrapper):
     async def close(self) -> None:
         if self._session is None:
             return
-        
+
         await self._session.close()
         self._session = None
 

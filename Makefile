@@ -1,18 +1,18 @@
 .PHONY: build
 
-python = python
+PYTHON = python
 
 build:
-	${python} -m build
+	${PYTHON} -m build
 
-pip = pip
+PIP = pip
 
 install:
-	${pip} install . -U
+	${PIP} install . -U
 
 install-editable:
-	${pip} install -e .[dev] --config-settings editable_mode=compat
+	${PIP} install -e .[dev] --config-settings editable_mode=compat
 
 test:
-	ruff .
+	ruff check .
 	pytest
