@@ -3,7 +3,7 @@ from ... import *
 from anmoku import Character
 
 @pytest.mark.asyncio(scope = "session")
-async def test_title_helper():
+async def test_name_helper():
     character = await async_client.get(Character, 65865)
 
     name = character.name

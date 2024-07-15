@@ -37,7 +37,13 @@ dev = [
     "ruff",
     "build",
     "pytest",
-    "pytest-asyncio"
+    "pytest-asyncio",
+    "Sphinx",
+    "sphinxext-opengraph",
+    "sphinx-inline-tabs",
+    "furo",
+    "myst-parser",
+    "sphinx-copybutton"
 ]
 
 [project.urls]

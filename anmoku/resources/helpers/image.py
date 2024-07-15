@@ -7,12 +7,15 @@ if TYPE_CHECKING:
 
 import io
 import requests
-from dataclasses import dataclass, field
 from PIL import Image as PillowImage
+from dataclasses import dataclass, field
+from devgoldyutils import LoggerAdapter, Colours
 
-from ... import logger
+from ...logger import anmoku_logger
 
 __all__ = ("Image",)
+
+logger = LoggerAdapter(anmoku_logger, prefix = "Image")
 
 @dataclass
 class Image():
@@ -44,11 +47,12 @@ class Image():
             self.url = small_image_url
 
     def get_image(self) -> Optional[PillowImage.Image]:
-        """Makes request to the url and returns the image as a Pillow Image object."""
+        """Makes request to the url and returns the image as a Pillow Image object. Returns None if the url request made wasn't okay."""
         if self.url is None:
             return None
 
-        logger.log_http_request("GET", self.url)
+        logger.debug(f"{Colours.GREEN.apply('GET')} --> {self.url}")
+
         r = requests.get(self.url)
 
         if r.ok is False:

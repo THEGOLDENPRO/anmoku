@@ -16,3 +16,9 @@ install-editable:
 test:
 	ruff check .
 	pytest -v
+
+build-docs:
+	cd docs && make html
+
+build-clean-docs:
+	cd docs && make clean && make html
