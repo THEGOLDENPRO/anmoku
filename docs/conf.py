@@ -11,8 +11,8 @@ sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "mov-cli"
-copyright = "2024, mov-cli"
+project = "anmoku"
+copyright = "2024, Goldy"
 author = "Goldy"
 
 # -- General configuration ---------------------------------------------------
@@ -34,9 +34,9 @@ source_suffix = ['.rst', '.md']
 
 # Opengraph Settings
 # -------------------
-ogp_site_url = "https://mov-cli.devgoldy.xyz"
+ogp_site_url = "https://anmoku.devgoldy.xyz"
 ogp_social_cards = {
-    "line_color": "#bf5c00",
+    "line_color": "#f54278",
     "width": 500
 }
 ogp_image = "_static/logo.png"
@@ -44,15 +44,15 @@ ogp_image = "_static/logo.png"
 
 html_theme_options = {
     "dark_css_variables": {
-        "color-brand-primary": "orange",
-        "color-brand-content": "#ffdfae",
-        "color-admonition-background": "#0d0904",
+        "color-brand-primary": "#f54278", # red pinkish
+        "color-brand-content": "#ff9cba", # light pink
+        "color-admonition-background": "#0d0407", # very dark pink
     },
 
     "light_css_variables": {
-        "color-brand-primary": "orange",
-        "color-brand-content": "#c95f12",
-        "color-admonition-background": "#ffe7ae",
+        "color-brand-primary": "#f54278", # red pinkish
+        "color-brand-content": "#ff9cba", # light pink
+        "color-admonition-background": "#ffaeb1", # bright reddish
     }
 }
 
@@ -60,6 +60,6 @@ html_theme_options = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-html_static_path = ['_static']
+html_static_path = ["_static"]
 html_logo = "_static/logo.png"
 html_favicon = "_static/logo.png"
