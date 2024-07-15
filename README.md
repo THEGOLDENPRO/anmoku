@@ -10,10 +10,10 @@
 
 > [!NOTE]
 > 
-> Anmoku is currently a work in progress so the features below may not be complete yet.
+> Anmoku is currently a work in progress so the features below may not be complete yet or experimental.
 
 ## Features ✨
-- [ ] Rate limiting 🎀 (with actual waiting).
+- [x] Rate limiting 🎀 (with actual waiting).
 - [ ] Supports caching. ⚡
 - [ ] [Fully type hinted.](#type-hinting-support-) 🌌 ~~*yes you heard me correctly*~~
 
