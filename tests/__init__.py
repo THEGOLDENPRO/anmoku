@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 import pytest
+import asyncio
 from anmoku.clients import AsyncAnmoku, Anmoku
 
 from slowstack.asynchronous.all import AllRateLimiter
@@ -25,9 +26,18 @@ async_client._rate_limiter = AllRateLimiter(
     }
 )
 
-def wait_after(seconds: int):
+def wait_after(seconds: int, is_async: bool = False):
 
     def outer(func):
+
+        if is_async:
+
+            async def inner(*args, **kwargs) -> None:
+                await func(*args, **kwargs)
+
+                await asyncio.sleep(seconds)
+
+            return inner
 
         def inner(*args, **kwargs) -> None:
             func(*args, **kwargs)
