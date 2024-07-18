@@ -74,13 +74,21 @@ class Anime(JikanResource):
     type: Optional[AnimeTypesData] = field(init = False)
     """The type of anime."""
     source: Optional[str] = field(init = False)
-    """The original material/source the anime was adapted from."""
+    """The original material / source the anime was adapted from."""
     episodes: int = field(init = False, default = 0)
     """Episode count of the anime."""
     status: AiringStatus = field(init = False, default = AiringStatus.NOT_YET_AIRED)
     """The airing status of the anime."""
     aired: DateRange = field(init = False)
     """To when and from this anime was aired."""
+    duration: Optional[str] = field(init = False)
+    """Duration of each episode of an anime or complete duration of an anime film."""
+    audience_rating: Optional[str] = field(init = False)
+    """Audience rating of this anime."""
+    score: float = field(init = False, default = 0.0)
+    """The anime's score rating."""
+    scored_by: int = field(init = False, default = 0)
+    """Number of users that scored the anime."""
 
     def __post_init__(self):
         anime = self.data["data"]
@@ -107,6 +115,26 @@ class Anime(JikanResource):
             self.status = AiringStatus(status)
 
         self.aired = DateRange(anime["aired"])
+
+        duration = anime["duration"]
+
+        if duration is not None:
+            self.duration = duration
+
+        audience_rating = anime["rating"]
+
+        if audience_rating is not None:
+            self.audience_rating = audience_rating
+
+        score = anime["score"]
+
+        if score is not None:
+            self.score = score
+
+        scored_by = anime["scored_by"]
+
+        if scored_by is not None:
+            self.scored_by = scored_by
 
 @dataclass
 class FullAnime(Anime): # TODO: Finish this. You can use the FullAnimeData type dict to help.

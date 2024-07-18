@@ -75,8 +75,6 @@ class Anmoku(BaseClient):
         session = self.__get_session()
         url = self.jikan_url + route
 
-        self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
-
         # 'AllRateLimiter' doesn't exist yet for the synchronous portion of slowstack so I '.acquire' for both rate-limiters instead.
         with self._minute_rate_limiter.acquire():
 

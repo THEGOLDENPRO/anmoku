@@ -87,16 +87,16 @@ class AnimeData(PartialAnimeData): # TODO: Redo these types but this time follow
     aired: DateRangeData
     duration: str
     rating: MALRatings
-    score: int
-    score_by: int
-    rank: int
-    popularity: int
-    members: int
-    favorites: int
-    synopsis: str
-    background: int
+    score: Optional[int]
+    score_by: Optional[int]
+    rank: Optional[int]
+    popularity: Optional[int]
+    members: Optional[int]
+    favorites: Optional[int]
+    synopsis: Optional[str]
+    background: Optional[int]
     season: Literal["summer", "fall"] | Any # TODO: Find the rest of these then remove Any.
-    year: int
+    year: Optional[int]
     broadcast: BroadcastData
     producers: List[EntryData]
     licensors: List[EntryData]
