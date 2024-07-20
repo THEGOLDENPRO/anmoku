@@ -90,3 +90,13 @@ On top of that, we even provide class interfaces if you wish for stability and e
 
 <img src="./assets/type_hints_3.png" width="100%">
 <img src="./assets/type_hints_2.png" width="100%">
+
+<br>
+
+<div align="center">
+
+  <img src="./assets/logo.svg" width="600px">
+
+  <sub>*Python's future Jikan API wrapper.*</sub>
+
+</div>
