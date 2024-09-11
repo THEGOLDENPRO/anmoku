@@ -9,7 +9,14 @@ readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
 keywords = [
-    "anime api wrapper", "mal", "myanimelist", "My Anime List", "jikan api wrapper", "async anime api wrapper", "jikan caching", "jikan rate limiting"
+    "anime api wrapper",
+    "mal",
+    "myanimelist",
+    "My Anime List",
+    "jikan api wrapper",
+    "async anime api wrapper",
+    "jikan caching",
+    "jikan rate limiting"
 ]
 classifiers = [
     "Operating System :: Microsoft :: Windows :: Windows 11",
