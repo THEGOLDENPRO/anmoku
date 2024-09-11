@@ -6,7 +6,7 @@ authors = [
     {name = "EmreTech", email = "emreterzioglu49@gmail.com"},
 ]
 readme = {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.11"
+requires-python = ">=3.8"
 license = { file = "LICENSE" }
 keywords = [
     "anime api wrapper", "mal", "myanimelist", "My Anime List", "jikan api wrapper", "async anime api wrapper", "jikan caching", "jikan rate limiting"
@@ -16,18 +16,19 @@ classifiers = [
     "Operating System :: Microsoft :: Windows :: Windows 10",
     "Operating System :: POSIX :: Linux",
     "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
-    "importlib-metadata; python_version<'3.8'",
     "typing-extensions",
     "devgoldyutils>=2.5.6",
     "requests",
     "aiohttp",
     "Pillow",
-    "slowstack"
+    "slowstack-plus"
 ]
 
 dynamic = ["version"]

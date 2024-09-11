@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Type
+    from typing import Any, Optional, Type, Tuple
 
     from ..typing.anmoku import SnowflakeT
     from ..typing.jikan import SearchResultData
@@ -30,19 +30,25 @@ class Anmoku(BaseClient):
     )
 
     def __init__(
-        self, 
-        debug: Optional[bool] = False, 
+        self,
+        debug: Optional[bool] = False,
         jikan_url: Optional[str] = None,
-        session: Optional[Session] = None
+        session: Optional[Session] = None,
+        rate_limits: Optional[Tuple[Tuple[int, int], Tuple[int, int]]] = None
     ) -> None:
         super().__init__(debug)
 
         self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = session
 
-        # https://docs.api.jikan.moe/#section/Information/Rate-Limiting
-        self._second_rate_limiter = TimesPerRateLimiter(3, 3)
-        self._minute_rate_limiter = TimesPerRateLimiter(60, 60)
+        if rate_limits is None:
+            # https://docs.api.jikan.moe/#section/Information/Rate-Limiting
+            rate_limits = ((3, 3), (60, 60))
+
+        second_rate_limits, minute_rate_limits = rate_limits
+
+        self._second_rate_limiter = TimesPerRateLimiter(second_rate_limits[0], second_rate_limits[1])
+        self._minute_rate_limiter = TimesPerRateLimiter(minute_rate_limits[0], minute_rate_limits[1])
 
     def get(self, resource: Type[ResourceGenericT], id: SnowflakeT) -> ResourceGenericT:
         """Get's the exact resource by id."""

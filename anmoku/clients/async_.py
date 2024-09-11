@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Type, Dict
+    from typing import Any, Optional, Type, Dict, Tuple
 
     from ..typing.anmoku import SnowflakeT
     from ..typing.jikan import SearchResultData
@@ -31,21 +31,24 @@ class AsyncAnmoku(BaseClient):
     )
 
     def __init__(
-        self, 
-        debug: Optional[bool] = False, 
+        self,
+        debug: Optional[bool] = False,
         jikan_url: Optional[str] = None,
-        session: Optional[ClientSession] = None
+        session: Optional[ClientSession] = None,
+        rate_limits: Optional[Tuple[Tuple[int, int], Tuple[int, int]]] = None
     ) -> None:
         super().__init__(debug)
 
         self.jikan_url = jikan_url or "https://api.jikan.moe/v4"
         self._session = session
 
-        # https://docs.api.jikan.moe/#section/Information/Rate-Limiting
+        if rate_limits is None:
+            # https://docs.api.jikan.moe/#section/Information/Rate-Limiting
+            rate_limits = ((3, 3), (60, 60))
+
         self._rate_limiter = AllRateLimiter(
             {
-                TimesPerRateLimiter(3, 3), 
-                TimesPerRateLimiter(60, 60)
+                TimesPerRateLimiter(limit, per) for (limit, per) in rate_limits
             }
         )
 
