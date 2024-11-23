@@ -3,6 +3,7 @@ from typing import TypedDict, final, List, TypeVar
 from typing_extensions import NotRequired
 
 from .anime import PartialAnimeData
+from .manga import PartialMangaData
 from .person import PartialPersonData
 
 T = TypeVar("T")
@@ -27,7 +28,7 @@ class CharacterAnimeData(TypedDict):
 
 class CharacterMangaData(TypedDict):
     role: str
-    manga: PartialAnimeData # Anime, manga same thing lmao. # TODO: We should change this once we have MangaData though.
+    manga: PartialMangaData
 
 class CharacterVoicesData(TypedDict):
     language: str
