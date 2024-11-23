@@ -18,7 +18,7 @@ from ..base import JikanResource
 from ..helpers import Title, Image, DateRange
 
 __all__ = (
-    "Anime", 
+    "Anime",
     "FullAnime"
 )
 
@@ -29,26 +29,6 @@ class AiringStatus(Enum):
 
     def __init__(self, value: AnimeAiringStatusData) -> None:
         ...
-
-@dataclass
-class Trailer():
-    """Helper for the anime's trailer."""
-    data: TrailerData = field(repr = False)
-
-    id: str = field(init = False)
-    url: str = field(init = False)
-    embed_url: str = field(init = False)
-    image: Image = field(init = False)
-
-    def __post_init__(self):
-        self.id = self.data["youtube_id"]
-        """Video ID of the trailer."""
-        self.url = self.data["url"]
-        """Url to trailer."""
-        self.embed_url = self.data["embed_url"]
-        """Url to the trailer's embed."""
-        self.image = Image(self.data["images"])
-        """Image of the trailer."""
 
 @dataclass
 class Anime(JikanResource):
@@ -141,3 +121,23 @@ class FullAnime(Anime): # TODO: Finish this. You can use the FullAnimeData type 
     _get_endpoint = "/anime/{id}/full"
 
     data: JikanResponseData[FullAnimeData] = field(repr=False)
+
+@dataclass
+class Trailer():
+    """Helper for the anime's trailer."""
+    data: TrailerData = field(repr = False)
+
+    id: str = field(init = False)
+    url: str = field(init = False)
+    embed_url: str = field(init = False)
+    image: Image = field(init = False)
+
+    def __post_init__(self):
+        self.id = self.data["youtube_id"]
+        """Video ID of the trailer."""
+        self.url = self.data["url"]
+        """Url to trailer."""
+        self.embed_url = self.data["embed_url"]
+        """Url to the trailer's embed."""
+        self.image = Image(self.data["images"])
+        """Image of the trailer."""

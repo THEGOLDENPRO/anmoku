@@ -20,29 +20,16 @@ __all__ = (
 )
 
 @dataclass
-class VoiceActor():
-    data: VoiceActorData = field(repr = False)
+class AnimeCharacters(JikanResource):
+    """Get data of the characters from a particular anime."""
+    _get_endpoint = "/anime/{id}/characters"
 
-    id: int = field(init = False)
-    """The MyAnimeList ID of this voice actor."""
-    url: str = field(init = False)
-    """The MyAnimeList URL to this voice actor."""
-    name: str = field(init = False)
-    """The name of this voice actor."""
-    image: Image = field(init = False)
-    """The image of this voice actor."""
+    data: JikanResponseData[List[AnimeCharacterData]]
 
-    language: str = field(init = False)
-    """The language they are voice acting in."""
+    def __iter__(self):
 
-    def __post_init__(self):
-        person = self.data["person"]
-
-        self.id = person["mal_id"]
-        self.url = person["url"]
-        self.name = person["name"]
-        self.image = Image(person["images"])
-        self.language = self.data["language"]
+        for character in self.data["data"]:
+            yield AnimeCharacter(character)
 
 @dataclass
 class AnimeCharacter():
@@ -74,13 +61,26 @@ class AnimeCharacter():
         self.voice_actors = [VoiceActor(actor) for actor in self.data.get("voice_actors", [])]
 
 @dataclass
-class AnimeCharacters(JikanResource):
-    """Get data of the characters from a particular anime."""
-    _get_endpoint = "/anime/{id}/characters"
+class VoiceActor():
+    data: VoiceActorData = field(repr = False)
 
-    data: JikanResponseData[List[AnimeCharacterData]]
+    id: int = field(init = False)
+    """The MyAnimeList ID of this voice actor."""
+    url: str = field(init = False)
+    """The MyAnimeList URL to this voice actor."""
+    name: str = field(init = False)
+    """The name of this voice actor."""
+    image: Image = field(init = False)
+    """The image of this voice actor."""
 
-    def __iter__(self):
+    language: str = field(init = False)
+    """The language they are voice acting in."""
 
-        for character in self.data["data"]:
-            yield AnimeCharacter(character)
+    def __post_init__(self):
+        person = self.data["person"]
+
+        self.id = person["mal_id"]
+        self.url = person["url"]
+        self.name = person["name"]
+        self.image = Image(person["images"])
+        self.language = self.data["language"]
