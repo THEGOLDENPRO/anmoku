@@ -21,7 +21,26 @@ __all__ = (
 
 @dataclass
 class AnimeCharacters(JikanResource):
-    """Get data of the characters from a particular anime."""
+    """
+    Get data of the characters from a particular anime.
+
+    ------------
+
+    ⭐ Example:
+    ------------
+    To get characters from an AnimeCharacter object you must iterate over it like so::
+
+        from anmoku import Anmoku, AnimeCharacters
+
+        client = Anmoku(debug = True)
+
+        anime_characters = client.get(AnimeCharacters, id = 28851) # ID for the anime film "A Silent Voice".
+
+        for character in anime_characters:
+        print(f"{character.name} ({character.url})")
+
+        client.close()
+    """
     _get_endpoint = "/anime/{id}/characters"
 
     data: JikanResponseData[List[AnimeCharacterData]]

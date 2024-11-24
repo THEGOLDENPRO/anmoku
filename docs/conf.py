@@ -61,5 +61,6 @@ html_theme_options = {
 
 html_theme = "furo"
 html_static_path = ["_static"]
-html_logo = "_static/logo.png"
+html_logo = "_static/logo.svg"
 html_favicon = "_static/logo.png"
+html_title = " "
