@@ -1,8 +1,15 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ...typing.jikan.manga.manga import MangaStatus, RelationData, ExternalSourceData
+    from typing import List
+
+    from ...typing.jikan.manga.manga import (
+        MangaStatus, 
+        RelationData, 
+        ExternalSourceData
+    )
+
     from ...typing.jikan import (
         MangaData, 
         FullMangaData, 
@@ -31,6 +38,27 @@ class PublishingStatus(Enum):
 
 @dataclass
 class Manga(JikanResource):
+    """
+    Get or search for manga.
+
+    ------------
+
+    ⭐ Example:
+    ------------
+    Here's an example of how to get an anime by ID and display it's cover art::
+        from anmoku import Manga, Anmoku
+
+        client = Anmoku()
+
+        manga = client.get(Manga, id = 85)
+
+        print(
+            f"Got the manga '{manga.name}', it's japanese name is '{manga.name.japanese}' and it was published in {manga.published.from_.year}."
+        )
+
+        # Display it's image.
+        manga.image.get_image().show()
+    """
     _get_endpoint = "/manga/{id}"
     _search_endpoint = "/manga"
 

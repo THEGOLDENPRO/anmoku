@@ -9,3 +9,5 @@ from .image import *
 from .search_result import *
 from .name import *
 from .manga import *
+from .news import *
+from .forum import *

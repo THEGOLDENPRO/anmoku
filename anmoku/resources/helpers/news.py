@@ -1,0 +1,59 @@
+from __future__ import annotations
+from datetime import datetime
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+
+    from ...typing.jikan import (
+        NewsData, 
+    )
+
+from dataclasses import dataclass, field
+
+from ..helpers import Image
+
+__all__ = (
+    "News",
+)
+
+@dataclass
+class News():
+    data: NewsData = field(repr = False)
+
+    id: int = field(init = False)
+    """The MyAnimeList ID for this news article."""
+    url: str = field(init = False)
+    """The MyAnimeList URL for this news article."""
+    title: str = field(init = False)
+    """The title of the news article."""
+    name: str = field(init = False)
+    """Alias to ``News.title``."""
+    date: datetime = field(init = False)
+    """The publication date of this news article."""
+    author_username: str = field(init = False)
+    """The username of the author who wrote this news article."""
+    author_url: str = field(init = False)
+    """The profile URL of the author on MyAnimeList."""
+    forum_str: str = field(init = False)
+    """The profile URL of the author on MyAnimeList."""
+    images: Image = field(init = False)
+    """The banner image of this news article."""
+    comments: int = field(init = False)
+    """The amount of comments on this news article."""
+    excerpt: str = field(init = False)
+    """A brief preview of the news article content."""
+    
+    def __post_init__(self):
+        news = self.data
+        
+        self.id = news["mal_id"]
+        self.url = news["url"]
+        self.title = news["title"]
+        self.name = self.title
+        self.date = datetime.fromisoformat(news["date"])
+        self.author_username = news["author_username"]
+        self.author_url = news["author_url"]
+        self.forum_str = news["forum_url"]
+        self.images = Image(news["images"])
+        self.comments = news["comments"]
+        self.excerpt = news["excerpt"]
