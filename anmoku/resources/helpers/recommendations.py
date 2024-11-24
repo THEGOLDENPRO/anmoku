@@ -18,7 +18,7 @@ class Recommendation():
     """The MyAnimeList ID of the recommendation."""
     url: str = field(init = False)
     """The MyAnimeList URL of the recommendation."""
-    images: Image = field(init = False)
+    image: Image = field(init = False)
     """The banner image of the recommendation."""
     title: str = field(init = False)
     """The title of the recommendation."""
@@ -30,6 +30,6 @@ class Recommendation():
 
         self.id = item["mal_id"]
         self.url = item["url"]
-        self.images = Image(item["images"])
+        self.image = Image(item["images"])
         self.title = item["title"]
         self.name = self.title
