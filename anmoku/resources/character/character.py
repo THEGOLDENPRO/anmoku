@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import List, Optional
-    from ..typing.jikan import (
+    from ...typing.jikan import (
         JikanResponseData, 
         CharacterData,
         FullCharacterData
@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass, field
 
-from .base import JikanResource
-from .helpers import Image, Name
+from ..base import JikanResource
+from ..helpers import Image, Name
 
 __all__ = ("Character", "FullCharacter")
 

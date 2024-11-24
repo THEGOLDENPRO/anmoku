@@ -20,6 +20,18 @@ __all__ = (
 )
 
 @dataclass
+class AnimeEpisodes(JikanResource):
+    """Get an anime's episodes."""
+    _get_endpoint = "/anime/{id}/episodes"
+
+    data: JikanPageResponseData[List[AnimeEpisodeData]]
+
+    def __iter__(self):
+
+        for episode in self.data["data"]:
+            yield AnimeEpisode(episode)
+
+@dataclass
 class AnimeEpisode():
     data: AnimeEpisodeData = field(repr = False)
 
@@ -73,15 +85,3 @@ class AnimeEpisode():
         self.filler = self.data["filler"]
         self.recap = self.data["recap"]
         self.forum_url = self.data["forum_url"]
-
-@dataclass
-class AnimeEpisodes(JikanResource):
-    """Get an anime's episodes."""
-    _get_endpoint = "/anime/{id}/episodes"
-
-    data: JikanPageResponseData[List[AnimeEpisodeData]]
-
-    def __iter__(self):
-
-        for episode in self.data["data"]:
-            yield AnimeEpisode(episode)

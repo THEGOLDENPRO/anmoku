@@ -18,6 +18,18 @@ __all__ = (
 )
 
 @dataclass
+class AnimeStaff(JikanResource):
+    """Get data of the staff from a particular anime."""
+    _get_endpoint = "/anime/{id}/staff"
+
+    data: JikanResponseData[List[AnimeStaffData]]
+
+    def __iter__(self):
+
+        for staff in self.data["data"]:
+            yield AnimeIndividualStaff(staff)
+
+@dataclass
 class AnimeIndividualStaff():
     data: AnimeStaffData
 
@@ -42,15 +54,3 @@ class AnimeIndividualStaff():
         self.image = Image(person["images"])
 
         self.positions = self.data["positions"]
-
-@dataclass
-class AnimeStaff(JikanResource):
-    """Get data of the staff from a particular anime."""
-    _get_endpoint = "/anime/{id}/staff"
-
-    data: JikanResponseData[List[AnimeStaffData]]
-
-    def __iter__(self):
-
-        for staff in self.data["data"]:
-            yield AnimeIndividualStaff(staff)
