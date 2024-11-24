@@ -54,9 +54,11 @@ class Anmoku(BaseClient):
         self._second_rate_limiter = TimesPerRateLimiter(second_rate_limits[0], second_rate_limits[1])
         self._minute_rate_limiter = TimesPerRateLimiter(minute_rate_limits[0], minute_rate_limits[1])
 
-    def get(self, resource: Type[ResourceGenericT], id: SnowflakeT) -> ResourceGenericT:
+    def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
         """Get's the exact resource by id."""
-        url = resource._get_endpoint.format(id = id)
+        url = self._format_url(
+            resource._get_endpoint, resource, id = id, **kwargs
+        )
 
         json_data = self._request(url)
 

@@ -20,11 +20,19 @@ if TYPE_CHECKING:
     )
 
 import logging
+from urllib.parse import quote
 from abc import ABC, abstractmethod
 from devgoldyutils import LoggerAdapter
 
 from ..logger import anmoku_logger
-from ..errors import ErrorResponseDict, NotFoundError, RatelimitError, ServerError, HTTPError
+from ..errors import (
+    ErrorResponseDict,
+    NotFoundError,
+    RatelimitError,
+    ServerError,
+    HTTPError,
+    ResourceRequiresError
+)
 
 __all__ = ("BaseClient",)
 
@@ -56,6 +64,15 @@ class BaseClient(ABC):
     def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
         ...
+
+    def _format_url(self, unformatted_url: str, resource: Type[ResourceGenericT], *args: str, **kwargs: str) -> str:
+        """Formats the URL while also taking URL encoding into account."""
+        try:
+            formatted_url = unformatted_url.format(*args, **kwargs)
+        except KeyError as e:
+            raise ResourceRequiresError(resource, e.args[0])
+
+        return quote(formatted_url)
 
     def _raise_http_error(self, data: Mapping[str, Any], status: int):
         data = cast(ErrorResponseDict, data)
