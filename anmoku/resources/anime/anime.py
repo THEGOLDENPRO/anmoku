@@ -13,6 +13,7 @@ if TYPE_CHECKING:
         AnimeData, 
         FullAnimeData, 
         JikanResponseData,
+        MoreInfoData
     )
     from ...typing.mal import MALRatings
 
@@ -173,6 +174,19 @@ class FullAnime(Anime): # TODO: Finish this. You can use the FullAnimeData type 
 
     data: JikanResponseData[FullAnimeData] = field(repr=False)
 
+@dataclass
+class AnimeMoreInfo(JikanResource):
+    _get_endpoint = "/anime/{id}/moreinfo"
+
+    data: JikanResponseData[MoreInfoData] = field(repr=False)
+
+    more_info: Optional[str] = field(init = False, default = None)
+
+    def __post_init__(self):
+        more_info = self.data["data"]["moreinfo"]
+
+        if more_info is not None:
+            self.more_info = more_info
 
 @dataclass
 class Trailer():
