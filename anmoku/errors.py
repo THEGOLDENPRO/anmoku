@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, Optional, TypedDict
 
 if TYPE_CHECKING:
     from typing import Type
-    from logging import Logger
     from typing_extensions import NotRequired
 
     from .resources import JikanResource
@@ -13,6 +12,7 @@ from devgoldyutils import Colours
 
 __all__ = (
     "ResourceNotSupportedError",
+    "ResourceRequiresError",
     "HTTPError",
     "NotFoundError",
     "RatelimitError",
@@ -31,9 +31,16 @@ class AnmokuException(Exception):
         super().__init__(formatted_message)
 
 class ResourceNotSupportedError(AnmokuException):
-    def __init__(self, resource: Type[JikanResource], not_supported: str, logger: Logger = None):
+    def __init__(self, resource: Type[JikanResource], not_supported: str):
         super().__init__(
             f"The '{resource.__name__}' resource does not support {not_supported}!"
+        )
+
+class ResourceRequiresError(AnmokuException):
+    def __init__(self, resource: Type[JikanResource], parameter_required: str):
+        super().__init__(
+            f"The '{resource.__name__}' resource requires the keyword parameter '{parameter_required}' to be passed! " \
+                f"E.g. client.get(resource, id = 1, {parameter_required} = 1)"
         )
 
 class HTTPError(AnmokuException):

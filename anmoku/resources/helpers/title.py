@@ -40,3 +40,28 @@ class Title():
 
     def __str__(self) -> str:
         return self.default
+
+    @classmethod
+    def _from_old_title_data(
+        cls,
+        default_title: str,
+        japanese_title: Optional[str],
+        romanji_title: Optional[str]
+    ):
+        titles: List[TitleData] = []
+
+        if japanese_title is not None:
+            titles.append(
+                {"type": "Japanese", "title": japanese_title}
+            )
+
+        if romanji_title is not None:
+            titles.append(
+                {"type": "Japanese", "title": romanji_title}
+            )
+
+        titles.append(
+            {"type": "Default", "title": default_title}
+        )
+
+        return cls(titles)

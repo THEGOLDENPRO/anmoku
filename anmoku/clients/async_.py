@@ -56,9 +56,11 @@ class AsyncAnmoku(BaseClient):
             }
         )
 
-    async def get(self, resource: Type[ResourceGenericT], id: SnowflakeT) -> ResourceGenericT:
+    async def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
         """Get's the exact resource by id."""
-        url = resource._get_endpoint.format(id = id)
+        url = self._format_url(
+            resource._get_endpoint, resource, id = id, **kwargs
+        )
 
         json_data = await self._request(url)
 

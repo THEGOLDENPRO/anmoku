@@ -37,7 +37,7 @@ async def test_get_all_resources():
     for resource, anime_ids_to_test in test_list.items():
 
         for anime_id in anime_ids_to_test:
-            resource_object = await async_client.get(resource, anime_id)
+            resource_object = await async_client.get(resource, anime_id, episode = 1)
 
             if resource not in resources_to_in_depth_test:
                 resources_to_in_depth_test[resource] = []
