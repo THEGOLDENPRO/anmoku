@@ -4,12 +4,17 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Optional
 
-    from ...typing.jikan.anime.anime import AnimeTypesData, AnimeAiringStatusData, TrailerData
+    from ...typing.jikan.anime.anime import (
+        AnimeTypesData,
+        AnimeAiringStatusData,
+        TrailerData
+    )
     from ...typing.jikan import (
         AnimeData, 
         FullAnimeData, 
         JikanResponseData,
     )
+    from ...typing.mal import MALRatings
 
 from enum import Enum
 from dataclasses import dataclass, field
@@ -41,6 +46,28 @@ class AnimeSeason(Enum):
 
 @dataclass
 class Anime(JikanResource):
+    """
+    Get or search for anime.
+
+    ------------
+
+    ⭐ Example:
+    ------------
+    Here's an example of how to get an anime by ID and display it's cover art::
+
+        from anmoku import Anime, Anmoku
+
+        client = Anmoku()
+
+        anime = client.get(Anime, id = 13759)
+
+        print(
+            f"Got the anime '{anime.name}', it's english name is '{anime.name.english}' and it was aired in {anime.aired.from_.year}."
+        )
+
+        # Display it's image.
+        anime.image.get_image().show()
+    """
     _get_endpoint = "/anime/{id}"
     _search_endpoint = "/anime"
 
@@ -72,7 +99,7 @@ class Anime(JikanResource):
     """To when and from this anime was aired."""
     duration: Optional[str] = field(init = False, default = None)
     """Duration of each episode of an anime or complete duration of an anime film."""
-    audience_rating: Optional[str] = field(init = False, default = None)
+    audience_rating: Optional[MALRatings] = field(init = False, default = None)
     """Audience rating of this anime."""
     score: float = field(init = False, default = 0.0)
     """The anime's score rating."""
@@ -107,6 +134,8 @@ class Anime(JikanResource):
         self.background = anime["background"]
         self.description = self.synopsis or self.background
         self.source = anime["source"]
+        self.duration = anime["duration"]
+        self.audience_rating = anime["rating"]
 
         # "is not None" is used on the keys below to make sure
         # they are undefined so the dataclass fields fall back to their
@@ -121,22 +150,12 @@ class Anime(JikanResource):
         if episodes is not None:
             self.episodes = episodes
 
-        status = anime.get("status")
+        status = anime["status"]
 
         if status is not None:
             self.status = AiringStatus(status)
 
         self.aired = DateRange(anime["aired"])
-
-        duration = anime["duration"]
-
-        if duration is not None:
-            self.duration = duration
-
-        audience_rating = anime["rating"]
-
-        if audience_rating is not None:
-            self.audience_rating = audience_rating
 
         score = anime["score"]
 

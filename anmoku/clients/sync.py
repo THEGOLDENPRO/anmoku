@@ -20,7 +20,11 @@ from ..errors import ResourceNotSupportedError
 __all__ = ("Anmoku",)
 
 class Anmoku(BaseClient):
-    """The normal synchronous Anmoku client. Uses requests for http and [slowstack](https://github.com/TAG-Epic/slowstack) for rate limiting."""
+    """
+    The normal synchronous Anmoku client. Uses requests for http and `slowstack`_ for rate limiting.
+
+    .. _slowstack: https://github.com/TAG-Epic/slowstack
+    """
 
     __slots__ = (
         "_session",

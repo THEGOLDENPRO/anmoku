@@ -23,6 +23,9 @@ test_list.update(
             18, # Initial D Fourth Stage
             60108, # One Piece: Gyojin Tou-hen
             57433, # Seishun Buta Yarou wa Santa Claus no Yume wo Minai
+            4454, # Macross F: Close Encounter - Deculture Edition
+            43534, # Xiao Song Shu Li Fa Shi (SCORE IS N/A),
+            5842, # Kotatsu Neko (SOME RANDOM ONA)
         )
     }
 )

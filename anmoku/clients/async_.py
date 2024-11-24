@@ -22,7 +22,11 @@ from ..errors import ResourceNotSupportedError
 __all__ = ("AsyncAnmoku",)
 
 class AsyncAnmoku(BaseClient):
-    """Asynchronous anmoku client. Uses aiohttp for http and [slowstack](https://github.com/TAG-Epic/slowstack) for rate-limiting."""
+    """
+    Asynchronous anmoku client. Uses aiohttp for http and `slowstack`_ for rate-limiting.
+
+    .. _slowstack: https://github.com/TAG-Epic/slowstack
+    """
 
     __slots__ = (
         "_session",

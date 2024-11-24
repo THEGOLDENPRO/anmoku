@@ -37,7 +37,7 @@ class AnimeData(PartialAnimeData): # TODO: Redo these types but this time follow
     duration: Optional[str]
     rating: Optional[MALRatings]
     score: Optional[float]
-    score_by: Optional[int]
+    scored_by: Optional[int]
     rank: Optional[int]
     popularity: Optional[int]
     members: Optional[int]

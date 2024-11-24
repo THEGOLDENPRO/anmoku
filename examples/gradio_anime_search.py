@@ -1,21 +1,18 @@
 import gradio # pip install gradio
-from anmoku import Anime, Anmoku, RatelimitError
+from anmoku import Anime, Anmoku
 
 client = Anmoku(debug = True)
 
 def search_anime(query: str):
-    anime_list = []
+    anime_list = client.search(Anime, query)
 
-    try:
-        anime_list = client.search(Anime, query)
-    except RatelimitError as e: # NOTE: This is here because rate limiting hasn't been implemented yet in this version.
-        raise gradio.Error(e.message)
-
-    return [(x.image.get_image(), str(x.name)) for x in anime_list]
+    return [
+        (x.image.get_image(), str(x.name)) for x in anime_list
+    ]
 
 demo = gradio.Interface(
-    search_anime, 
-    inputs = "text", 
+    search_anime,
+    inputs = "text",
     outputs = gradio.Gallery(height = 600)
 )
 
