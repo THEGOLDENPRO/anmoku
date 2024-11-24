@@ -58,9 +58,9 @@ async def test_resource_attributes():
                 try:
                     getattr(resource, attribute)
                 except AttributeError as e:
-                    assert False, f"The '{attribute}' field is undefined in " \
-                        f"{resource_class.__name__} for resource ID '{id}'!" \
-                        f"\n Error: {e}"
+                    assert False, f"The '{attribute}' dataclass field is undefined in " \
+                        f"{resource_class.__name__} for resource ID '{id}'! That field might " \
+                        f"be missing a default value.\n Error: {e}"
 
 @pytest.mark.asyncio(scope = "session")
 async def test_full_anime():
@@ -69,7 +69,7 @@ async def test_full_anime():
     assert str(full_anime.name) == "Cowboy Bebop"
 
 @pytest.mark.asyncio(scope = "session")
-@wait_after(3, is_async = True)
+@wait_after(3, is_async = True) # so the second rate-limiter is clear before it gets to test_client.py
 async def test_anime_characters():
     anime_characters: AnimeCharacters = resources_to_in_depth_test[AnimeCharacters][0][0]
 

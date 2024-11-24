@@ -3,7 +3,7 @@ from ... import *
 from anmoku import Anime
 
 @pytest.mark.asyncio(scope = "session")
-@wait_after(3, is_async = True) # so the second rate-limiter is clear before it gets to test_name.py
+@wait_after(3, is_async = True) # so the rate-limiters are all clear before we move to test_resources.py
 async def test_title_helper():
     anime = await async_client.get(Anime, 28851)
 
