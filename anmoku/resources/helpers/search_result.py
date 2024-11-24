@@ -5,14 +5,14 @@ if TYPE_CHECKING:
     from typing import Any, Type, Generator
     from ...typing.jikan import SearchResultData
 
+from dataclasses import dataclass, field
+
 from ..base import JikanResource
 
 A = TypeVar(
     "A", 
     bound = JikanResource
 )
-
-from dataclasses import dataclass, field
 
 __all__ = ("SearchResult",)
 

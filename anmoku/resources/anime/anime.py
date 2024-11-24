@@ -30,6 +30,15 @@ class AiringStatus(Enum):
     def __init__(self, value: AnimeAiringStatusData) -> None:
         ...
 
+class AnimeSeason(Enum):
+    SUMMER = "summer"
+    WINTER = "winter"
+    SPRING = "spring"
+    FALL = "fall"
+
+    def __init__(self, value: AnimeAiringStatusData) -> None:
+        ...
+
 @dataclass
 class Anime(JikanResource):
     _get_endpoint = "/anime/{id}"
@@ -51,9 +60,9 @@ class Anime(JikanResource):
     """The anime's title."""
     name: Title = field(init = False)
     """Alias to ``Anime.title``."""
-    type: Optional[AnimeTypesData] = field(init = False)
+    type: AnimeTypesData = field(init = False)
     """The type of anime."""
-    source: Optional[str] = field(init = False)
+    source: Optional[str] = field(init = False, default = None)
     """The original material / source the anime was adapted from."""
     episodes: int = field(init = False, default = 0)
     """Episode count of the anime."""
@@ -61,14 +70,23 @@ class Anime(JikanResource):
     """The airing status of the anime."""
     aired: DateRange = field(init = False)
     """To when and from this anime was aired."""
-    duration: Optional[str] = field(init = False)
+    duration: Optional[str] = field(init = False, default = None)
     """Duration of each episode of an anime or complete duration of an anime film."""
-    audience_rating: Optional[str] = field(init = False)
+    audience_rating: Optional[str] = field(init = False, default = None)
     """Audience rating of this anime."""
     score: float = field(init = False, default = 0.0)
     """The anime's score rating."""
     scored_by: int = field(init = False, default = 0)
     """Number of users that scored the anime."""
+    rank: int = field(init = False, default = 0)
+    popularity: int = field(init = False, default = 0)
+    members: int = field(init = False, default = 0)
+    favourites: int = field(init = False, default = 0)
+    synopsis: Optional[str] = field(init = False, default = None)
+    background: Optional[str] = field(init = False, default = None)
+    description: Optional[str] = field(init = False, default = None)
+    season: Optional[AnimeSeason] = field(init = False, default = None)
+    year: int = field(init = False, default = 0)
 
     def __post_init__(self):
         anime = self.data["data"]
@@ -80,11 +98,25 @@ class Anime(JikanResource):
         self.approved = anime["approved"]
         self.title = Title(anime["titles"])
         self.name = self.title
-        self.type = anime.get("type")
-        self.source = anime.get("source")
+        self.type = anime["type"]
+        self.rank = anime["rank"]
+        self.popularity = anime["popularity"]
+        self.members = anime["members"]
+        self.favourites = anime["favorites"]
+        self.synopsis = anime["synopsis"]
+        self.background = anime["background"]
+        self.description = self.synopsis or self.background
+        self.source = anime["source"]
 
-        # Making sure episodes default to 0 if there's none.
-        episodes = anime.get("episodes")
+        # "is not None" is used on the keys below to make sure
+        # they are undefined so the dataclass fields fall back to their
+        # respective default values.
+        season = anime["season"]
+
+        if season is not None:
+            self.season = AnimeSeason(season)
+
+        episodes = anime["episodes"]
 
         if episodes is not None:
             self.episodes = episodes
@@ -121,6 +153,7 @@ class FullAnime(Anime): # TODO: Finish this. You can use the FullAnimeData type 
     _get_endpoint = "/anime/{id}/full"
 
     data: JikanResponseData[FullAnimeData] = field(repr=False)
+
 
 @dataclass
 class Trailer():

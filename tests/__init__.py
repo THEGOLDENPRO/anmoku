@@ -1,9 +1,16 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Type, List
+    from anmoku.clients.base import ResourceGenericT
 
 import time
 import pytest
+import inspect
 import asyncio
 from anmoku.clients import AsyncAnmoku, Anmoku
+from anmoku.resources import * # this MUST be a star import
 
 from slowstack.asynchronous.all import AllRateLimiter
 from slowstack.asynchronous.times_per import TimesPerRateLimiter
@@ -12,7 +19,8 @@ __all__ = (
     "pytest",
     "client",
     "async_client",
-    "wait_after"
+    "wait_after",
+    "get_all_resource_classes"
 )
 
 client = Anmoku(debug = True)
@@ -47,3 +55,21 @@ def wait_after(seconds: int, is_async: bool = False):
         return inner
 
     return outer
+
+def get_all_resource_classes() -> List[Type[ResourceGenericT]]:
+    resources = []
+
+    for _, _object in globals().items():
+
+        if not inspect.isclass(_object):
+            continue
+
+        if issubclass(_object, JikanResource):
+            resource = _object
+
+            if resource._get_endpoint is None:
+                continue
+
+            resources.append(resource)
+
+    return resources

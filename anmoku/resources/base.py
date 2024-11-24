@@ -10,7 +10,7 @@ __all__ = ("JikanResource",)
 
 @dataclass
 class JikanResource():
-    _get_endpoint: Optional[str] = field(init = False, default = None) # TODO: Check if this has to be optional.
+    _get_endpoint: Optional[str] = field(init = False, default = None)
     """The jikan api endpoint where you can get this object."""
     _search_endpoint: Optional[str] = field(init = False, default = None)
     """The jikan api endpoint to search with this resource."""

@@ -2,46 +2,73 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Dict, Type
+    from typing import List, Dict, Type, Tuple
     from anmoku.clients.base import ResourceGenericT
 
 from .. import *
 
-import inspect
-from anmoku import *
+import dataclasses
+from anmoku import Anime, FullAnime, AnimeCharacters
 
-resources_to_in_depth_test: Dict[Type[ResourceGenericT], ResourceGenericT] = {}
+test_list: Dict[Type[ResourceGenericT], Tuple[int]] = {
+    resource_class: (1,) for resource_class in get_all_resource_classes()
+}
+
+test_list.update(
+    {
+        # TODO: Add more uniquely defined content for other resources.
+        Anime: (
+            1, # Cowboy Bebop
+            52480, # Tantei wa Mou, Shindeiru. Season 2 (UNRELEASED)
+            18, # Initial D Fourth Stage
+            60108, # One Piece: Gyojin Tou-hen
+            57433, # Seishun Buta Yarou wa Santa Claus no Yume wo Minai
+        )
+    }
+)
+
+resources_to_in_depth_test: Dict[Type[ResourceGenericT], List[Tuple[ResourceGenericT, int]]] = {}
 
 @pytest.mark.asyncio(scope = "session")
 async def test_get_all_resources():
-    for _, _object in globals().items():
+    for resource, anime_ids_to_test in test_list.items():
 
-        if not inspect.isclass(_object):
-            continue
+        for anime_id in anime_ids_to_test:
+            resource_object = await async_client.get(resource, anime_id)
 
-        if issubclass(_object, JikanResource):
-            resource = _object
+            if resource not in resources_to_in_depth_test:
+                resources_to_in_depth_test[resource] = []
 
-            if resource._get_endpoint is None:
-                continue
+            resources_to_in_depth_test[resource].append((resource_object, anime_id))
 
-            print(">", _object)
+@pytest.mark.asyncio(scope = "session")
+async def test_resource_attributes():
+    for resource_class in resources_to_in_depth_test:
 
-            resource_object = await async_client.get(resource, 1)
+        for (resource, id) in resources_to_in_depth_test[resource_class]:
+            fields = dataclasses.fields(resource_class)
 
-            resources_to_in_depth_test[resource] = resource_object
+            for attribute in [field.name for field in fields]:
+                if attribute.startswith("_"):
+                    continue
 
+                try:
+                    getattr(resource, attribute)
+                except AttributeError as e:
+                    assert False, f"The '{attribute}' field is undefined in " \
+                        f"{resource_class.__name__} for resource ID '{id}'!" \
+                        f"\n Error: {e}"
 
 @pytest.mark.asyncio(scope = "session")
 async def test_full_anime():
-    full_anime: FullAnime = resources_to_in_depth_test[FullAnime]
+    full_anime: FullAnime = resources_to_in_depth_test[FullAnime][0][0]
 
     assert str(full_anime.name) == "Cowboy Bebop"
 
 @pytest.mark.asyncio(scope = "session")
 @wait_after(3, is_async = True)
 async def test_anime_characters():
-    anime_characters: AnimeCharacters = resources_to_in_depth_test[AnimeCharacters]
+    anime_characters: AnimeCharacters = resources_to_in_depth_test[AnimeCharacters][0][0]
 
     character_ids = [x.id for x in anime_characters]
 
@@ -52,3 +79,5 @@ async def test_anime_characters():
     assert 4 in character_ids # Ein
     assert 2734 in character_ids # Vicious
     assert 2736 in character_ids # Grencia Mars Elijah Guo Eckener
+
+# TODO: Test more resources

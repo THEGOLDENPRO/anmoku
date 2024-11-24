@@ -1,5 +1,3 @@
-lint.ignore = ["E501", "E402", "E702", "E701", "E731"]
-
 target-version = "py39"
 
 [lint.per-file-ignores]
