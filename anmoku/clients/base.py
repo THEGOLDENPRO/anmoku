@@ -15,8 +15,9 @@ if TYPE_CHECKING:
 
     SearchResourceGenericT = TypeVar(
         "SearchResourceGenericT", 
-        resources.Anime, 
+        resources.Anime,
         resources.Character,
+        resources.Manga
     )
 
 import logging

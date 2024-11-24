@@ -48,6 +48,7 @@ class Manga(JikanResource):
     ⭐ Example:
     ------------
     Here's an example of how to get an anime by ID and display it's cover art::
+
         from anmoku import Manga, Anmoku
 
         client = Anmoku()
