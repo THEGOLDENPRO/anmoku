@@ -36,7 +36,7 @@ class News():
     """The profile URL of the author on MyAnimeList."""
     forum_str: str = field(init = False)
     """The profile URL of the author on MyAnimeList."""
-    images: Image = field(init = False)
+    image: Image = field(init = False)
     """The banner image of this news article."""
     comments: int = field(init = False)
     """The amount of comments on this news article."""
@@ -54,6 +54,6 @@ class News():
         self.author_username = news["author_username"]
         self.author_url = news["author_url"]
         self.forum_str = news["forum_url"]
-        self.images = Image(news["images"])
+        self.image = Image(news["images"])
         self.comments = news["comments"]
         self.excerpt = news["excerpt"]

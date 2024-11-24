@@ -4,3 +4,6 @@ from .staff import *
 from .episodes import *
 from .news import *
 from .forum import *
+from .pictures import *
+from .recommendations import *
+from .reviews import *

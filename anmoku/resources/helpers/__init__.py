@@ -5,3 +5,5 @@ from .search_result import *
 from .name import *
 from .news import *
 from .forum import *
+from .recommendations import *
+from .review import *

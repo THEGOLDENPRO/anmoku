@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List
+    from typing import List, Optional
 
     from ...typing.jikan.manga.manga import (
         MangaStatus, 
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
         MangaData, 
         FullMangaData, 
         JikanResponseData,
+        MoreInfoData
     )
 
 from dataclasses import dataclass, field
@@ -24,7 +25,8 @@ from ..helpers import Title, Image, DateRange
 
 __all__ = (
     "Manga", 
-    "FullManga"
+    "FullManga",
+    "MangaMoreInfo"
 )
 
 
@@ -129,3 +131,17 @@ class FullManga(Manga):
         self.title_synonyms = manga["title_synonyms"]
         self.relations = manga["relations"]
         self.external = manga["external"]
+
+@dataclass
+class MangaMoreInfo(JikanResource):
+    _get_endpoint = "/manga/{id}/moreinfo"
+
+    data: JikanResponseData[MoreInfoData] = field(repr=False)
+
+    more_info: Optional[str] = field(init = False, default = None)
+
+    def __post_init__(self):
+        more_info = self.data["data"]["moreinfo"]
+
+        if more_info is not None:
+            self.more_info = more_info
