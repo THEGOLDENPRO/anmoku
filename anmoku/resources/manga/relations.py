@@ -2,16 +2,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List
+    from typing import List, Generator, Any
 
     from ...typing.jikan import (
         RelationData,
         JikanResponseData,
     )
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from ..base import JikanResource
+from ..base import JikanIterableResource
 from ..helpers import Relation
 
 __all__ = (
@@ -19,11 +19,16 @@ __all__ = (
 )
 
 @dataclass
-class MangaRelations(JikanResource):
+class MangaRelations(JikanIterableResource):
     _get_endpoint = "/manga/{id}/relations"
 
-    data: JikanResponseData[List[RelationData]] = field(repr = False)
+    data: JikanResponseData[List[RelationData]]
     
-    def __iter__(self):
-        for relation in self.data["data"]:
-            yield Relation(relation)
+    def __post_init__(self):
+        super().__post_init__(Relation)
+
+    def __next__(self) -> Relation:
+        return super().__next__()
+
+    def __iter__(self) -> Generator[Relation, Any, None]:
+        return super().__iter__()

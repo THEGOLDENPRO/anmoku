@@ -1,14 +1,16 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from typing import List, Generator, Any, Optional
+
     from ...typing.jikan.manga import MangaUserUpdatesData
     from ...typing.jikan.api import JikanResponseData
 
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from ..base import JikanResource
+from ..base import JikanIterableResource
 from ..helpers import User
 
 __all__ = (
@@ -49,12 +51,16 @@ class UserUpdate():
         self.date = datetime.fromisoformat(update["date"])
 
 @dataclass
-class MangaUserUpdates(JikanResource):
+class MangaUserUpdates(JikanIterableResource):
     _get_endpoint = "/manga/{id}/userupdates"
 
-    data: JikanResponseData[List[MangaUserUpdatesData]] = field(repr = False)
+    data: JikanResponseData[List[MangaUserUpdatesData]]
 
-    def __iter__(self):
+    def __post_init__(self):
+        super().__post_init__(UserUpdate)
 
-        for update in self.data["data"]:
-            yield UserUpdate(update)
+    def __next__(self) -> UserUpdate:
+        return super().__next__()
+
+    def __iter__(self) -> Generator[UserUpdate, Any, None]:
+        return super().__iter__()

@@ -2,16 +2,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List
+    from typing import List, Generator, Any
 
     from ...typing.jikan import (
         ReviewData,
         JikanResponseData,
     )
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from ..base import JikanResource
+from ..base import JikanIterableResource
 from ..helpers import Review
 
 __all__ = (
@@ -19,11 +19,16 @@ __all__ = (
 )
 
 @dataclass
-class MangaReviews(JikanResource):
+class MangaReviews(JikanIterableResource):
     _get_endpoint = "/manga/{id}/reviews"
 
-    data: JikanResponseData[List[ReviewData]] = field(repr = False)
+    data: JikanResponseData[List[ReviewData]]
     
-    def __iter__(self):
-        for review in self.data["data"]:
-            yield Review(review)
+    def __post_init__(self):
+        super().__post_init__(Review)
+
+    def __next__(self) -> Review:
+        return super().__next__()
+
+    def __iter__(self) -> Generator[Review, Any, None]:
+        return super().__iter__()

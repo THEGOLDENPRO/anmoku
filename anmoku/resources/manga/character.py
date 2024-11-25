@@ -1,13 +1,15 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from typing import List, Generator, Any
+
     from ...typing.jikan.manga.characters import MangaCharacterData
     from ...typing.jikan.api import JikanResponseData
 
 from dataclasses import dataclass, field
 
-from ..base import JikanResource
+from ..base import JikanIterableResource
 from ..helpers.image import Image
 
 __all__ = (
@@ -42,13 +44,17 @@ class MangaCharacter():
         self.role = self.data["role"]
 
 @dataclass
-class MangaCharacters(JikanResource):
+class MangaCharacters(JikanIterableResource):
     """Get data of the characters from a particular manga."""
     _get_endpoint = "/manga/{id}/characters"
 
     data: JikanResponseData[List[MangaCharacterData]]
 
-    def __iter__(self):
+    def __post_init__(self):
+        super().__post_init__(MangaCharacter)
 
-        for character in self.data["data"]:
-            yield MangaCharacter(character)
+    def __next__(self) -> MangaCharacter:
+        return super().__next__()
+
+    def __iter__(self) -> Generator[MangaCharacter, Any, None]:
+        return super().__iter__()
