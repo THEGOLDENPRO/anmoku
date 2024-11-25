@@ -14,7 +14,7 @@ __all__ = (
     "MoreInfoMangaData"
 )
 
-MangaStatus = Literal["Publishing", "Finished", "Discontinued"]
+MangaStatus = Literal["Publishing", "Finished", "Discontinued", "On Hiatus"]
 
 class PartialMangaData(TypedDict):
     mal_id: int

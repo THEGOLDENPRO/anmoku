@@ -34,6 +34,7 @@ class PublishingStatus(Enum):
     FINISHED = "Finished"
     PUBLISHING = "Publishing"
     DISCONTINUED = "Discontinued"
+    ON_HIATUS = "On Hiatus"
 
     def __init__(self, value: MangaStatus) -> None:
         ...
