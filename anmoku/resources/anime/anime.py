@@ -50,6 +50,10 @@ class Anime(JikanResource):
     """
     Get or search for anime.
 
+    Required Params
+    -----------------
+    * `id` - Anime ID
+
     ------------
 
     ⭐ Example:

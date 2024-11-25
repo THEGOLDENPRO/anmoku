@@ -21,6 +21,10 @@ class AnimeCharacters(JikanIterableResource):
     """
     Get data of the characters from a particular anime.
 
+    Required Params
+    -----------------
+    * `id` - Anime ID
+
     ------------
 
     ⭐ Example:

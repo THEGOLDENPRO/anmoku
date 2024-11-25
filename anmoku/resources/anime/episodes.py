@@ -23,7 +23,15 @@ __all__ = (
 
 @dataclass
 class AnimeEpisodes(JikanIterableResource):
-    """Get an anime's episodes with anime's ID."""
+    """
+    Get an anime's episodes with anime's ID.
+
+    -----------------
+
+    Required Params
+    -----------------
+    * `id` - Anime ID
+    """
     _get_endpoint = "/anime/{id}/episodes"
 
     data: JikanPageResponseData[List[AnimeEpisodeData]]
