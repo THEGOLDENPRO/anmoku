@@ -50,9 +50,13 @@ class Anime(JikanResource):
     """
     Get or search for anime.
 
+    [`jikan`_]
+
+    .. _jikan: https://docs.api.jikan.moe/#tag/anime/operation/getAnimeById
+
     Required Params
     -----------------
-    * `id` - Anime ID
+    * `id` - Manga ID
 
     ------------
 
