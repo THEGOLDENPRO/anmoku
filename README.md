@@ -4,6 +4,8 @@
 
   <sub>A peaceful and fully typed [MyAnimeList](https://myanimelist.net/) / [Jikan](https://jikan.moe/) Python API wrapper with caching and proper rate limiting.</sub>
 
+  <br>
+
   <img width="600px" src="./assets/quick_showcase_1.gif">
 
   <br>
