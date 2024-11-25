@@ -66,14 +66,14 @@ class AsyncAnmoku(BaseClient):
 
         return resource(json_data)
 
-    async def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
+    async def search(self, resource: Type[SearchResourceGenericT], query: str, sfw: bool = True) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
         url = resource._search_endpoint
 
         if url is None:
             raise ResourceNotSupportedError(resource, "searching")
 
-        json_data: SearchResultData[Any] = await self._request(url, params = {"q": query})
+        json_data: SearchResultData[Any] = await self._request(url, params = {"q": query, "sfw": str(sfw).lower()})
 
         return SearchResult(json_data, resource)
 
@@ -90,10 +90,11 @@ class AsyncAnmoku(BaseClient):
         url = self.jikan_url + route
 
         async with self._rate_limiter.acquire():
-
             self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
             async with session.get(url, params = params, headers = headers) as resp:
+                self.logger.debug(f"Complete URL: '{resp.url}'")
+
                 content = await resp.text()
 
                 if not resp.content_type == "application/json":

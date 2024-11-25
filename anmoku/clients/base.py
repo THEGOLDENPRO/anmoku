@@ -61,7 +61,7 @@ class BaseClient(ABC):
         ...
 
     @abstractmethod
-    def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
+    def search(self, resource: Type[SearchResourceGenericT], query: str, sfw: bool = True) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
         ...
 

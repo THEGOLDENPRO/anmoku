@@ -64,14 +64,14 @@ class Anmoku(BaseClient):
 
         return resource(json_data)
 
-    def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
+    def search(self, resource: Type[SearchResourceGenericT], query: str, sfw: bool = True) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
         url = resource._search_endpoint
 
         if url is None:
             raise ResourceNotSupportedError(resource, "searching")
 
-        json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
+        json_data: SearchResultData[Any] = self._request(url, params = {"q": query, "sfw": str(sfw).lower()})
 
         return SearchResult(json_data, resource)
 
@@ -91,10 +91,11 @@ class Anmoku(BaseClient):
         with self._minute_rate_limiter.acquire():
 
             with self._second_rate_limiter.acquire():
-
                 self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
                 with session.get(url, params = params, headers = headers) as resp:
+                    self.logger.debug(f"Complete URL: '{resp.url}'")
+
                     content = resp.json()
 
                     if resp.status_code > 400:
