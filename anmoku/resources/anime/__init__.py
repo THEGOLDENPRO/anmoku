@@ -9,3 +9,4 @@ from .recommendations import *
 from .reviews import *
 from .relations import *
 from .external import *
+from .genre import *

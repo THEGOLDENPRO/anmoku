@@ -10,3 +10,4 @@ from .review import *
 from .user import *
 from .relations import *
 from .external import *
+from .genre import *

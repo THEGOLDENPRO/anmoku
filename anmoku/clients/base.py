@@ -27,6 +27,12 @@ if TYPE_CHECKING:
         resources.Manga
     )
 
+    GenresResourceGenericT = TypeVar(
+        "GenresResourceGenericT", 
+        resources.AnimeGenres,
+        resources.MangaGenres
+    )
+
 import logging
 from urllib.parse import quote
 from abc import ABC, abstractmethod
@@ -76,6 +82,11 @@ class BaseClient(ABC):
     @abstractmethod
     def random(self, resource: Type[RandomResourceGenericT]) -> RandomResourceGenericT:
         """Fetches a random object of the specified resource."""
+        ...
+    
+    @abstractmethod
+    def genres(self, resource: Type[GenresResourceGenericT]) -> GenresResourceGenericT:
+        """Fetches a genres of the specified resource."""
         ...
 
     def _format_url(self, unformatted_url: str, resource: Type[ResourceGenericT], *args: str, **kwargs: str) -> str:

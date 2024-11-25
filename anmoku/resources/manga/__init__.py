@@ -9,3 +9,4 @@ from .reviews import *
 from .user_updates import *
 from .relations import *
 from .external import *
+from .genre import *

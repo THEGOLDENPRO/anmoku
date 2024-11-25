@@ -17,3 +17,4 @@ from .review import *
 from .user import *
 from .entry import *
 from .external import *
+from .genre import *

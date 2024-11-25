@@ -72,7 +72,7 @@ class Anime(JikanResource):
     _get_endpoint = "/anime/{id}"
     _search_endpoint = "/anime"
     _random_endpoint = "/random/anime"
-
+    _genres_endpoint = "/genres/anime"
 
     data: JikanResponseData[AnimeData] = field(repr = False)
 
