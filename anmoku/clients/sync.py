@@ -96,7 +96,7 @@ class Anmoku(BaseClient):
         url = resource._genres_endpoint
 
         if url is None:
-            raise ResourceNotSupportedError(resource, "random")
+            raise ResourceNotSupportedError(resource, "genres")
 
         json_data = self._request(url)
 

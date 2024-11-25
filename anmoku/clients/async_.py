@@ -95,10 +95,10 @@ class AsyncAnmoku(BaseClient):
 
     async def genres(self, resource: Type[GenresResourceGenericT]) -> GenresResourceGenericT:
         """Fetches a random object of the specified resource."""
-        url = resource._random_endpoint
+        url = resource._genres_endpoint
 
         if url is None:
-            raise ResourceNotSupportedError(resource, "random")
+            raise ResourceNotSupportedError(resource, "genres")
 
         json_data = await self._request(url)
 
