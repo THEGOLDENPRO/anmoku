@@ -14,5 +14,7 @@ class JikanResource():
     """The jikan api endpoint where you can get this object."""
     _search_endpoint: Optional[str] = field(init = False, default = None)
     """The jikan api endpoint to search with this resource."""
+    _random_endpoint: Optional[str] = field(init = False, default = None)
+    """The jikan api endpoint to get a random object with this resource."""
 
     data: JikanResponseData[Any]

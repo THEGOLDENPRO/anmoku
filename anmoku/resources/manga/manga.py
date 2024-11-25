@@ -64,6 +64,7 @@ class Manga(JikanResource):
     """
     _get_endpoint = "/manga/{id}"
     _search_endpoint = "/manga"
+    _random_endpoint = "/random/manga"
 
     data: JikanResponseData[MangaData] = field(repr = False)
 

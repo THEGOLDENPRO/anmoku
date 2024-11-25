@@ -20,6 +20,12 @@ if TYPE_CHECKING:
         resources.Manga
     )
 
+    RandomResourceGenericT = TypeVar(
+        "RandomResourceGenericT", 
+        resources.Anime,
+        resources.Manga
+    )
+
 import logging
 from urllib.parse import quote
 from abc import ABC, abstractmethod
@@ -64,6 +70,11 @@ class BaseClient(ABC):
     @abstractmethod
     def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
+        ...
+    
+    @abstractmethod
+    def random(self, resource: Type[RandomResourceGenericT]) -> RandomResourceGenericT:
+        """Fetches a random object of the specified resource."""
         ...
 
     def _format_url(self, unformatted_url: str, resource: Type[ResourceGenericT], *args: str, **kwargs: str) -> str:

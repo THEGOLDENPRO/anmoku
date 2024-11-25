@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from ..typing.anmoku import SnowflakeT
     from ..typing.jikan import SearchResultData
 
-    from .base import ResourceGenericT, SearchResourceGenericT
+    from .base import ResourceGenericT, SearchResourceGenericT, RandomResourceGenericT
 
 from requests import Session
 from devgoldyutils import Colours
@@ -74,6 +74,17 @@ class Anmoku(BaseClient):
         json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
 
         return SearchResult(json_data, resource)
+    
+    def random(self, resource: Type[RandomResourceGenericT]) -> RandomResourceGenericT:
+        """Fetches a random object of the specified resource."""
+        url = resource._random_endpoint
+
+        if url is None:
+            raise ResourceNotSupportedError(resource, "random")
+
+        json_data = self._request(url)
+
+        return resource(json_data)
 
     def _request(
         self, 
