@@ -20,7 +20,7 @@ __all__ = (
 
 @dataclass
 class AnimeGenres(JikanResource):
-    _genres_endpoint = "/genres/anime"
+    _get_endpoint = "/genres/anime"
 
     data: JikanResponseData[List[GenreData]] = field(repr = False)
     

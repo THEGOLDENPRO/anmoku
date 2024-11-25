@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 if TYPE_CHECKING:
     from typing import Any, Optional, Type, Tuple
@@ -8,10 +8,10 @@ if TYPE_CHECKING:
     from ..typing.jikan import SearchResultData
 
     from .base import (
-        ResourceGenericT, 
-        SearchResourceGenericT, 
-        RandomResourceGenericT, 
-        GenresResourceGenericT
+        ResourceGenericT,
+        SearchResourceGenericT,
+        NoArgsResourceGenericT,
+        RandomResourceGenericT
     )
 
 from requests import Session
@@ -59,10 +59,21 @@ class Anmoku(BaseClient):
         self._second_rate_limiter = TimesPerRateLimiter(second_rate_limits[0], second_rate_limits[1])
         self._minute_rate_limiter = TimesPerRateLimiter(minute_rate_limits[0], minute_rate_limits[1])
 
+    @overload
+    def get(self, resource: Type[NoArgsResourceGenericT]) -> NoArgsResourceGenericT:
+        ...
+
+    @overload
     def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
-        """Get's the exact resource by id."""
+        ...
+
+    def get(self, resource: Type[ResourceGenericT], id: Optional[SnowflakeT] = None, **kwargs) -> ResourceGenericT:
+        """Get's the exact resource typically by id."""
+        if id is not None:
+            kwargs["id"] = id
+
         url = self._format_url(
-            resource._get_endpoint, resource, id = id, **kwargs
+            resource._get_endpoint, resource, **kwargs
         )
 
         json_data = self._request(url)
@@ -79,24 +90,13 @@ class Anmoku(BaseClient):
         json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
 
         return SearchResult(json_data, resource)
-    
+
     def random(self, resource: Type[RandomResourceGenericT]) -> RandomResourceGenericT:
         """Fetches a random object of the specified resource."""
         url = resource._random_endpoint
 
         if url is None:
             raise ResourceNotSupportedError(resource, "random")
-
-        json_data = self._request(url)
-
-        return resource(json_data)
-
-    def genres(self, resource: Type[GenresResourceGenericT]) -> GenresResourceGenericT:
-        """Fetches a random object of the specified resource."""
-        url = resource._genres_endpoint
-
-        if url is None:
-            raise ResourceNotSupportedError(resource, "genres")
 
         json_data = self._request(url)
 

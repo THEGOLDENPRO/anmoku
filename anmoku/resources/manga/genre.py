@@ -20,10 +20,10 @@ __all__ = (
 
 @dataclass
 class MangaGenres(JikanResource):
-    _genres_endpoint = "/genres/manga"
+    _get_endpoint = "/genres/manga"
 
     data: JikanResponseData[List[GenreData]] = field(repr = False)
-    
+
     def __iter__(self):
         for genre in self.data["data"]:
             yield Genre(genre)

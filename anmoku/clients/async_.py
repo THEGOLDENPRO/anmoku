@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 if TYPE_CHECKING:
     from typing import Any, Optional, Type, Dict, Tuple
@@ -11,7 +11,7 @@ if TYPE_CHECKING:
         ResourceGenericT, 
         SearchResourceGenericT, 
         RandomResourceGenericT, 
-        GenresResourceGenericT
+        NoArgsResourceGenericT
     )
 
 from aiohttp import ClientSession
@@ -61,10 +61,21 @@ class AsyncAnmoku(BaseClient):
             }
         )
 
-    async def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
-        """Get's the exact resource by id."""
+    @overload
+    def get(self, resource: Type[NoArgsResourceGenericT]) -> NoArgsResourceGenericT:
+        ...
+
+    @overload
+    def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
+        ...
+
+    async def get(self, resource: Type[ResourceGenericT], id: Optional[SnowflakeT] = None, **kwargs) -> ResourceGenericT:
+        """Get's the exact resource typically by id."""
+        if id is not None:
+            kwargs["id"] = id
+
         url = self._format_url(
-            resource._get_endpoint, resource, id = id, **kwargs
+            resource._get_endpoint, resource, **kwargs
         )
 
         json_data = await self._request(url)
@@ -88,17 +99,6 @@ class AsyncAnmoku(BaseClient):
 
         if url is None:
             raise ResourceNotSupportedError(resource, "random")
-
-        json_data = await self._request(url)
-
-        return resource(json_data)
-
-    async def genres(self, resource: Type[GenresResourceGenericT]) -> GenresResourceGenericT:
-        """Fetches a random object of the specified resource."""
-        url = resource._genres_endpoint
-
-        if url is None:
-            raise ResourceNotSupportedError(resource, "genres")
 
         json_data = await self._request(url)
 
