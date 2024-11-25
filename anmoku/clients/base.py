@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     RandomResourceGenericT = TypeVar(
         "RandomResourceGenericT", 
         resources.Anime,
+        resources.Character,
         resources.Manga
     )
 
