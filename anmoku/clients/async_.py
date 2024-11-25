@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, overload
 if TYPE_CHECKING:
     from typing import Any, Optional, Type, Dict, Tuple
 
-    from ..typing.anmoku import SnowflakeT
+    from ..typing.anmoku import StrOrIntT
     from ..typing.jikan import SearchResultData
 
     from .base import (
@@ -66,10 +66,10 @@ class AsyncAnmoku(BaseClient):
         ...
 
     @overload
-    async def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
+    async def get(self, resource: Type[ResourceGenericT], id: StrOrIntT, **kwargs) -> ResourceGenericT:
         ...
 
-    async def get(self, resource: Type[ResourceGenericT], id: Optional[SnowflakeT] = None, **kwargs) -> ResourceGenericT:
+    async def get(self, resource: Type[ResourceGenericT], id: Optional[StrOrIntT] = None, **kwargs) -> ResourceGenericT:
         """Get's the exact resource typically by id."""
         if id is not None:
             kwargs["id"] = id

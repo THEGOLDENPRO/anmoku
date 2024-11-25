@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     from typing import Any, Mapping, TypeVar, Type, Optional
 
     from .. import resources
-    from ..typing.anmoku import SnowflakeT
+    from ..typing.anmoku import StrOrIntT
     from ..resources.helpers import SearchResult
 
     ResourceGenericT = TypeVar(
@@ -70,7 +70,7 @@ class BaseClient(ABC):
         super().__init__()
 
     @abstractmethod
-    def get(self, resource: Type[ResourceGenericT], id: Optional[SnowflakeT] = None, **kwargs) -> ResourceGenericT:
+    def get(self, resource: Type[ResourceGenericT], id: Optional[StrOrIntT] = None, **kwargs) -> ResourceGenericT:
         """Get's the exact resource by id."""
         ...
 
