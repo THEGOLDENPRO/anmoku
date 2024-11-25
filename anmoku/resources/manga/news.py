@@ -23,7 +23,7 @@ class MangaNews(JikanResource):
     _get_endpoint = "/manga/{id}/news"
 
     data: JikanResponseData[List[NewsData]] = field(repr = False)
-    
+
     def __iter__(self):
         for news in self.data["data"]:
             yield News(news)

@@ -25,7 +25,7 @@ class MangaTopics(JikanResource):
     _get_endpoint = "/manga/{id}/forum"
 
     data: JikanResponseData[List[ForumData]] = field(repr = False)
-    
+
     def __iter__(self):
         for forum in self.data["data"]:
             yield Forum(forum)

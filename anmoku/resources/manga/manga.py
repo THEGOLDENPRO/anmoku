@@ -44,6 +44,14 @@ class Manga(JikanResource):
     """
     Get or search for manga.
 
+    [`jikan`_]
+
+    .. _jikan: https://docs.api.jikan.moe/#tag/manga/operation/getMangaById
+
+    Required Params
+    -----------------
+    * `id` - Manga ID
+
     ------------
 
     ⭐ Example:
@@ -103,11 +111,10 @@ class Manga(JikanResource):
         self.approved = manga["approved"]
         self.title = Title(manga["titles"])
         self.name = self.title
+        self.chapters = manga["chapters"]
+        self.volumes = manga["volumes"]
 
-        self.chapters = manga.get("chapters")
-        self.volumes = manga.get("volumes")
-        
-        status = manga.get("status")
+        status = manga["status"]
 
         if status is not None:
             self.status = PublishingStatus(status)
@@ -115,7 +122,6 @@ class Manga(JikanResource):
         self.published = DateRange(manga["published"])
         self.score = manga["score"]
         self.scored_by = manga["scored_by"]
-
 
 @dataclass
 class FullManga(Manga):

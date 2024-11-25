@@ -23,7 +23,7 @@ class MangaExternal(JikanResource):
     _get_endpoint = "/manga/{id}/external"
 
     data: JikanResponseData[List[ExternalSourceData]] = field(repr = False)
-    
+
     def __iter__(self):
         for relation in self.data["data"]:
             yield ExternalSource(relation)

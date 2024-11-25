@@ -10,7 +10,8 @@ if TYPE_CHECKING:
 
 from dataclasses import dataclass, field
 
-from ..helpers import Image
+from .image import Image
+from .author import Author
 
 __all__ = (
     "News",
@@ -30,19 +31,17 @@ class News():
     """Alias to ``News.title``."""
     date: datetime = field(init = False)
     """The publication date of this news article."""
-    author_username: str = field(init = False)
-    """The username of the author who wrote this news article."""
-    author_url: str = field(init = False)
-    """The profile URL of the author on MyAnimeList."""
-    forum_str: str = field(init = False)
-    """The profile URL of the author on MyAnimeList."""
+    author: Author = field(init = False)
+    """The author who wrote this news article."""
+    forum_url: str = field(init = False)
+    """The URL to the news article's forum post."""
     image: Image = field(init = False)
     """The banner image of this news article."""
     comments: int = field(init = False)
     """The amount of comments on this news article."""
     excerpt: str = field(init = False)
     """A brief preview of the news article content."""
-    
+
     def __post_init__(self):
         news = self.data
         
@@ -51,9 +50,11 @@ class News():
         self.title = news["title"]
         self.name = self.title
         self.date = datetime.fromisoformat(news["date"])
-        self.author_username = news["author_username"]
-        self.author_url = news["author_url"]
-        self.forum_str = news["forum_url"]
+        self.author = Author(
+            url = news["author_url"],
+            username = news["author_username"]
+        )
+        self.forum_url = news["forum_url"]
         self.image = Image(news["images"])
         self.comments = news["comments"]
         self.excerpt = news["excerpt"]

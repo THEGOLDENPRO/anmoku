@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
     from ...typing.jikan.manga import MangaUserUpdatesData
@@ -21,17 +21,17 @@ class UserUpdate():
 
     user: User = field(init = False)
     """The user in this update."""
-    score: int = field(init = False)
+    score: Optional[int] = field(init = False)
     """The score the user gave the manga."""
     status: str = field(init = False)
     """The status, e.g. `Completed`."""
     volumes_read: int = field(init = False)
     """The amount of volumes read."""
-    volumes_total: int = field(init = False)
+    total_volumes: int = field(init = False)
     """The amount of total volumes."""
     chapters_read: int = field(init = False)
     """The amount of chapters read."""
-    chapters_total: int = field(init = False)
+    total_chapters: int = field(init = False)
     """The amount of total chapters."""
     date: datetime = field(init = False)
     """When the update was made."""
@@ -43,9 +43,9 @@ class UserUpdate():
         self.score = update["score"]
         self.status = update["status"]
         self.volumes_read = update["volumes_read"]
-        self.volumes_total = update["volumes_total"]
+        self.total_volumes = update["volumes_total"]
         self.chapters_read = update["chapters_read"]
-        self.chapters_total = update["chapters_total"]
+        self.total_chapters = update["chapters_total"]
         self.date = datetime.fromisoformat(update["date"])
 
 @dataclass
