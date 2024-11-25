@@ -64,14 +64,14 @@ class Anmoku(BaseClient):
 
         return resource(json_data)
 
-    def search(self, resource: Type[SearchResourceGenericT], query: str) -> SearchResult[SearchResourceGenericT]:
+    def search(self, resource: Type[SearchResourceGenericT], query: str, sfw: bool = True) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
         url = resource._search_endpoint
 
         if url is None:
             raise ResourceNotSupportedError(resource, "searching")
 
-        json_data: SearchResultData[Any] = self._request(url, params = {"q": query})
+        json_data: SearchResultData[Any] = self._request(url, params = {"q": query, "sfw": str(sfw).lower()})
 
         return SearchResult(json_data, resource)
 
