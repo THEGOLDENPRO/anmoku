@@ -1,13 +1,18 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 if TYPE_CHECKING:
     from typing import Any, Optional, Type, Dict, Tuple
 
-    from ..typing.anmoku import SnowflakeT
+    from ..typing.anmoku import StrOrIntT
     from ..typing.jikan import SearchResultData
 
-    from .base import ResourceGenericT, SearchResourceGenericT
+    from .base import (
+        ResourceGenericT, 
+        SearchResourceGenericT, 
+        RandomResourceGenericT, 
+        NoArgsResourceGenericT
+    )
 
 from aiohttp import ClientSession
 from devgoldyutils import Colours
@@ -56,10 +61,21 @@ class AsyncAnmoku(BaseClient):
             }
         )
 
-    async def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
-        """Get's the exact resource by id."""
+    @overload
+    async def get(self, resource: Type[NoArgsResourceGenericT]) -> NoArgsResourceGenericT:
+        ...
+
+    @overload
+    async def get(self, resource: Type[ResourceGenericT], id: StrOrIntT, **kwargs) -> ResourceGenericT:
+        ...
+
+    async def get(self, resource: Type[ResourceGenericT], id: Optional[StrOrIntT] = None, **kwargs) -> ResourceGenericT:
+        """Get's the exact resource typically by id."""
+        if id is not None:
+            kwargs["id"] = id
+
         url = self._format_url(
-            resource._get_endpoint, resource, id = id, **kwargs
+            resource._get_endpoint, resource, **kwargs
         )
 
         json_data = await self._request(url)
@@ -76,6 +92,17 @@ class AsyncAnmoku(BaseClient):
         json_data: SearchResultData[Any] = await self._request(url, params = {"q": query, "sfw": str(sfw).lower()})
 
         return SearchResult(json_data, resource)
+
+    async def random(self, resource: Type[RandomResourceGenericT]) -> RandomResourceGenericT:
+        """Fetches a random object of the specified resource."""
+        url = resource._random_endpoint
+
+        if url is None:
+            raise ResourceNotSupportedError(resource, "random")
+
+        json_data = await self._request(url)
+
+        return resource(json_data)
 
     async def _request(
         self, 

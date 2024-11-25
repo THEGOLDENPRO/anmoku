@@ -18,3 +18,9 @@ class PartialPersonData(TypedDict):
     url: str
     images: ImagesData
     name: str
+
+class PartialAuthorMangaData(TypedDict):
+    mal_id: int
+    type: str
+    url: str
+    name: str

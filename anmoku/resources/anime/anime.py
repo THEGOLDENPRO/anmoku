@@ -13,6 +13,7 @@ if TYPE_CHECKING:
         AnimeData, 
         FullAnimeData, 
         JikanResponseData,
+        MoreInfoData
     )
     from ...typing.mal import MALRatings
 
@@ -49,6 +50,14 @@ class Anime(JikanResource):
     """
     Get or search for anime.
 
+    [`jikan`_]
+
+    .. _jikan: https://docs.api.jikan.moe/#tag/anime/operation/getAnimeById
+
+    Required Params
+    -----------------
+    * `id` - Manga ID
+
     ------------
 
     ⭐ Example:
@@ -70,6 +79,7 @@ class Anime(JikanResource):
     """
     _get_endpoint = "/anime/{id}"
     _search_endpoint = "/anime"
+    _random_endpoint = "/random/anime"
 
     data: JikanResponseData[AnimeData] = field(repr = False)
 
@@ -173,6 +183,19 @@ class FullAnime(Anime): # TODO: Finish this. You can use the FullAnimeData type 
 
     data: JikanResponseData[FullAnimeData] = field(repr=False)
 
+@dataclass
+class AnimeMoreInfo(JikanResource):
+    _get_endpoint = "/anime/{id}/moreinfo"
+
+    data: JikanResponseData[MoreInfoData] = field(repr=False)
+
+    more_info: Optional[str] = field(init = False, default = None)
+
+    def __post_init__(self):
+        more_info = self.data["data"]["moreinfo"]
+
+        if more_info is not None:
+            self.more_info = more_info
 
 @dataclass
 class Trailer():

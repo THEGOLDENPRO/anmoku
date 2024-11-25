@@ -20,6 +20,7 @@ __all__ = ("Character", "FullCharacter")
 class Character(JikanResource):
     _get_endpoint = "/characters/{id}"
     _search_endpoint = "/characters"
+    _random_endpoint = "/random/characters"
 
     data: JikanResponseData[CharacterData] = field(repr = False)
 

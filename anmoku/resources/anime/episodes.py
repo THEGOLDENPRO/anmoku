@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List, Optional
+    from typing import List, Optional, Generator, Any
     from ...typing.jikan import (
         AnimeEpisodeData,
         SingleAnimeEpisodeData,
@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 
 from ..helpers import Title
-from ..base import JikanResource
+from ..base import JikanResource, JikanIterableResource
 
 __all__ = (
     "AnimeEpisodes",
@@ -22,16 +22,28 @@ __all__ = (
 )
 
 @dataclass
-class AnimeEpisodes(JikanResource):
-    """Get an anime's episodes with anime's ID."""
+class AnimeEpisodes(JikanIterableResource):
+    """
+    Get an anime's episodes with anime's ID.
+
+    -----------------
+
+    Required Params
+    -----------------
+    * `id` - Anime ID
+    """
     _get_endpoint = "/anime/{id}/episodes"
 
     data: JikanPageResponseData[List[AnimeEpisodeData]]
 
-    def __iter__(self):
+    def __post_init__(self):
+        super().__post_init__(AnimeEpisode)
 
-        for episode in self.data["data"]:
-            yield AnimeEpisode(episode)
+    def __next__(self) -> AnimeEpisode:
+        return super().__next__()
+
+    def __iter__(self) -> Generator[AnimeEpisode, Any, None]:
+        return super().__iter__()
 
 @dataclass
 class SingleAnimeEpisode(JikanResource):

@@ -6,4 +6,4 @@ from .clients import *
 from .resources import *
 from .errors import *
 
-__version__ = "1.0.0dev3"
+__version__ = "1.0.0alpha1"

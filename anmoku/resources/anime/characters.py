@@ -2,27 +2,28 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List
-    from ...typing.jikan import (
-        AnimeCharacterData, 
-        JikanResponseData
-    )
+    from typing import List, Generator, Any
+    from ...typing.jikan import AnimeCharacterData, JikanResponseData
 
     from ...typing.jikan.anime.characters import VoiceActorData
 
 from dataclasses import dataclass, field
 
 from ..helpers import Image
-from ..base import JikanResource
+from ..base import JikanIterableResource
 
 __all__ = (
     "AnimeCharacters",
 )
 
 @dataclass
-class AnimeCharacters(JikanResource):
+class AnimeCharacters(JikanIterableResource):
     """
     Get data of the characters from a particular anime.
+
+    Required Params
+    -----------------
+    * `id` - Anime ID
 
     ------------
 
@@ -37,7 +38,7 @@ class AnimeCharacters(JikanResource):
         anime_characters = client.get(AnimeCharacters, id = 28851) # ID for the anime film "A Silent Voice".
 
         for character in anime_characters:
-        print(f"{character.name} ({character.url})")
+            print(f"{character.name} ({character.url})")
 
         client.close()
     """
@@ -45,10 +46,14 @@ class AnimeCharacters(JikanResource):
 
     data: JikanResponseData[List[AnimeCharacterData]]
 
-    def __iter__(self):
+    def __post_init__(self):
+        super().__post_init__(AnimeCharacter)
 
-        for character in self.data["data"]:
-            yield AnimeCharacter(character)
+    def __next__(self) -> AnimeCharacter:
+        return super().__next__()
+
+    def __iter__(self) -> Generator[AnimeCharacter, Any, None]:
+        return super().__iter__()
 
 @dataclass
 class AnimeCharacter():

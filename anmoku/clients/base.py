@@ -2,10 +2,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from typing import Any, Mapping, TypeVar, Type
+    from typing import Any, Mapping, TypeVar, Type, Optional
 
     from .. import resources
-    from ..typing.anmoku import SnowflakeT
+    from ..typing.anmoku import StrOrIntT
     from ..resources.helpers import SearchResult
 
     ResourceGenericT = TypeVar(
@@ -15,8 +15,22 @@ if TYPE_CHECKING:
 
     SearchResourceGenericT = TypeVar(
         "SearchResourceGenericT", 
-        resources.Anime, 
+        resources.Anime,
         resources.Character,
+        resources.Manga
+    )
+
+    RandomResourceGenericT = TypeVar(
+        "RandomResourceGenericT", 
+        resources.Anime,
+        resources.Character,
+        resources.Manga
+    )
+
+    NoArgsResourceGenericT = TypeVar(
+        "NoArgsResourceGenericT", 
+        resources.AnimeGenres,
+        resources.MangaGenres
     )
 
 import logging
@@ -56,13 +70,18 @@ class BaseClient(ABC):
         super().__init__()
 
     @abstractmethod
-    def get(self, resource: Type[ResourceGenericT], id: SnowflakeT) -> ResourceGenericT:
+    def get(self, resource: Type[ResourceGenericT], id: Optional[StrOrIntT] = None, **kwargs) -> ResourceGenericT:
         """Get's the exact resource by id."""
         ...
 
     @abstractmethod
     def search(self, resource: Type[SearchResourceGenericT], query: str, sfw: bool = True) -> SearchResult[SearchResourceGenericT]:
         """Searches for the resource and returns a list of the results."""
+        ...
+
+    @abstractmethod
+    def random(self, resource: Type[RandomResourceGenericT]) -> RandomResourceGenericT:
+        """Fetches a random object of the specified resource."""
         ...
 
     def _format_url(self, unformatted_url: str, resource: Type[ResourceGenericT], *args: str, **kwargs: str) -> str:

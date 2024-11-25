@@ -3,6 +3,8 @@ from typing import TypedDict, final, List, Literal, Optional
 from ...mal import MALRatings
 from ..datetime import DateRangeData
 from ..title import TitleData
+from ..entry import EntryData, RelationData
+from ..external import ExternalSourceData
 
 __all__ = (
     "AnimeData",
@@ -91,20 +93,6 @@ class BroadcastData(TypedDict):
     timezone: str
     string: str
 
-class EntryData(TypedDict):
-    mal_id: int
-    type: str
-    name: str
-    url: str
-
-class RelationData(TypedDict):
-    relation: str
-    entry: List[EntryData]
-
 class ThemeData(TypedDict):
     openings: List[str]
     endings: List[str]
-
-class ExternalSourceData(TypedDict):
-    name: str
-    url: str
