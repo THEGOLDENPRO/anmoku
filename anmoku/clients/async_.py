@@ -62,11 +62,11 @@ class AsyncAnmoku(BaseClient):
         )
 
     @overload
-    def get(self, resource: Type[NoArgsResourceGenericT]) -> NoArgsResourceGenericT:
+    async def get(self, resource: Type[NoArgsResourceGenericT]) -> NoArgsResourceGenericT:
         ...
 
     @overload
-    def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
+    async def get(self, resource: Type[ResourceGenericT], id: SnowflakeT, **kwargs) -> ResourceGenericT:
         ...
 
     async def get(self, resource: Type[ResourceGenericT], id: Optional[SnowflakeT] = None, **kwargs) -> ResourceGenericT:
