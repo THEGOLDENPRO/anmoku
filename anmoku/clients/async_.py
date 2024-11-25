@@ -90,10 +90,11 @@ class AsyncAnmoku(BaseClient):
         url = self.jikan_url + route
 
         async with self._rate_limiter.acquire():
-
             self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
             async with session.get(url, params = params, headers = headers) as resp:
+                self.logger.debug(f"Complete URL: '{resp.url}'")
+
                 content = await resp.text()
 
                 if not resp.content_type == "application/json":

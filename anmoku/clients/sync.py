@@ -91,10 +91,11 @@ class Anmoku(BaseClient):
         with self._minute_rate_limiter.acquire():
 
             with self._second_rate_limiter.acquire():
-
                 self.logger.debug(f"{Colours.GREEN.apply('GET')} --> {url}")
 
                 with session.get(url, params = params, headers = headers) as resp:
+                    self.logger.debug(f"Complete URL: '{resp.url}'")
+
                     content = resp.json()
 
                     if resp.status_code > 400:
