@@ -7,3 +7,6 @@ from .news import *
 from .forum import *
 from .recommendations import *
 from .review import *
+from .user import *
+from .relations import *
+from .external import *

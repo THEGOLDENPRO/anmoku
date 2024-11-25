@@ -7,3 +7,5 @@ from .forum import *
 from .pictures import *
 from .recommendations import *
 from .reviews import *
+from .relations import *
+from .external import *

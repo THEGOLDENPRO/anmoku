@@ -4,16 +4,11 @@ from typing import TypedDict, TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import List
 
-    from .image import ImageData
+    from .user import PartialUserData
 
 __all__ = (
     "ReviewData",
 )
-
-class UserData(TypedDict):
-    username: str
-    url: str
-    images: ImageData
 
 class ReactionsData(TypedDict):
     overall: int
@@ -26,7 +21,7 @@ class ReactionsData(TypedDict):
     creative: int
 
 class ReviewData(TypedDict):
-    user: UserData
+    user: PartialUserData
     mal_id: int
     url: str
     type: str

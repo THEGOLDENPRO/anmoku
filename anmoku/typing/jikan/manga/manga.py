@@ -4,6 +4,8 @@ from typing import List, Literal, Optional, TypedDict
 from ..datetime import DateRangeData
 from ..title import TitleData
 from ..image import ImagesData
+from ..entry import EntryData, RelationData
+from ..external import ExternalSourceData
 
 __all__ = (
     "MangaData",
@@ -13,20 +15,6 @@ __all__ = (
 )
 
 MangaStatus = Literal["Publishing", "Finished", "Discontinued"]
-
-class EntryData(TypedDict):
-    mal_id: int
-    type: str
-    name: str
-    url: str
-
-class RelationData(TypedDict):
-    relation: str
-    entry: List[EntryData]
-
-class ExternalSourceData(TypedDict):
-    name: str
-    url: str
 
 class PartialMangaData(TypedDict):
     mal_id: int

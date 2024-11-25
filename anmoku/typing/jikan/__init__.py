@@ -11,6 +11,9 @@ from .name import *
 from .manga import *
 from .news import *
 from .forum import *
-from .moreinfo import *
+from .more_info import *
 from .recommendations import *
 from .review import *
+from .user import *
+from .entry import *
+from .external import *

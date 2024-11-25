@@ -4,33 +4,15 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import List
 
-    from ...typing.jikan.review import UserData, ReactionsData
+    from ...typing.jikan.review import ReactionsData
     from ...typing.jikan import ReviewData
 
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from .image import Image
+from .user import User
 
 __all__ = ("Review",)
-
-@dataclass
-class User():
-    data: UserData = field(repr = False)
-
-    username: str = field(init = False)
-    """The MyAnimeList Username of the reviewer."""
-    url: str = field(init = False)
-    """The MyAnimeList Profile URL of the reviewer."""
-    image: Image = field(init = False)
-    """The Profile Picture of the reviewer."""
-
-    def __post_init__(self):
-        user = self.data
-
-        self.username = user["username"]
-        self.url = user["url"]
-        self.image = Image(user["images"])
 
 @dataclass
 class Reactions():
