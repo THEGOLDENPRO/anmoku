@@ -4,6 +4,10 @@
 
   <sub>A peaceful and fully typed [MyAnimeList](https://myanimelist.net/) / [Jikan](https://jikan.moe/) Python API wrapper with caching and proper rate limiting.</sub>
 
+  [![Pypi Version](https://img.shields.io/pypi/v/anmoku?style=flat)](https://pypi.org/project/anmoku/)
+  [![Python Versions](https://img.shields.io/pypi/dm/anmoku?color=informational&label=pypi%20downloads)](https://pypi.org/project/anmoku/)
+  [![Pypi Downloads](https://img.shields.io/pypi/pyversions/anmoku?style=flat)](https://pypistats.org/packages/anmoku)
+
   <img width="550px" src="./assets/quick_showcase_1.gif">
 
   <br>
